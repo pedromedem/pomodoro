@@ -1,72 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Primary Meta Tags -->
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro Timer</title>
     <meta name="title" content="Pomodoro Timer" />
     <meta
       name="description"
-      content="Um contador pomodoro simples, bonito e funcional."
+      content="A simple, clear, and functional Pomodoro timer."
     />
     <meta name="keywords" content="pomodoro, pomodoro online, lucas pomodoro" />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://lucas-pomodoro.vercel.app/" />
     <meta property="og:title" content="Pomodoro Timer" />
     <meta
       property="og:description"
-      content="Um contador pomodoro simples, bonito e funcional."
+      content="A simple, clear, and functional Pomodoro timer."
     />
-    <meta property="og:image" content="./src/imgs/img-project.png" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://lucas-pomodoro.vercel.app/" />
-    <meta property="twitter:title" content="Pomodoro Timer" />
     <meta
-      property="twitter:description"
-      content="Um contador pomodoro simples, bonito e funcional."
+      property="og:image"
+      content="https://lucas-pomodoro.vercel.app/src/imgs/img-project.png"
     />
-    <meta property="twitter:image" content="./src/imgs/img-project.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://lucas-pomodoro.vercel.app/" />
+    <meta name="twitter:title" content="Pomodoro Timer" />
+    <meta
+      name="twitter:description"
+      content="A simple, clear, and functional Pomodoro timer."
+    />
+    <meta
+      name="twitter:image"
+      content="https://lucas-pomodoro.vercel.app/src/imgs/img-project.png"
+    />
 
     <link rel="stylesheet" href="./src/css/style.css" />
-    <link rel="shortcut icon" href="/src/imgs/clock.svg" type="image/x-icon" />
+    <link rel="icon" href="./src/imgs/clock.svg" type="image/svg+xml" />
   </head>
 
   <body class="green-theme">
-    <main class="container">
-      <div id="modal"></div>
-      <div class="pomodoro">
-        <div class="buttons">
-          <button class="btn active" id="pomodoro">pomodoro</button>
-          <button class="btn" id="shortBrake">short brake</button>
-          <button class="btn" id="longBrake">long brake</button>
-        </div>
-        <div class="timer">
-          <p id="minutes"></p>
-          <p>:</p>
-          <p id="seconds"></p>
-        </div>
-        <div class="button-timer">
-          <button class="btn" id="buttonStart">start</button>
-          <button class="btn" id="buttonPause">pause</button>
-          <button id="btndots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+    <script>
+      try {
+        if (localStorage.getItem("pomodoro.theme") === "pink") {
+          document.body.classList.remove("green-theme");
+          document.body.classList.add("pink-theme");
+        }
+      } catch (error) {
+        // Theme falls back to green when storage is unavailable.
+      }
+    </script>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">What is the Pomodoro Technique?</h2>
+          <button type="button" id="closeModal" aria-label="Close">
+            <img src="./src/imgs/xx.png" alt="" />
           </button>
         </div>
-        <div>
-          <p id="text"></p>
-        </div>
-        <div class="containerplay">
-          <button class="button"></button>
-        </div>
+        <p>
+          The Pomodoro Technique was developed in the late 1980s by then
+          university student Francesco Cirillo. Cirillo was struggling to
+          focus on his studies and complete assignments. Feeling overwhelmed,
+          he asked himself to commit to just 10 minutes of focused study time.
+          Encouraged by the challenge, he found a tomato (pomodoro in Italian)
+          shaped kitchen timer, and the Pomodoro technique was born.
+        </p>
       </div>
+    </dialog>
+    <main class="container">
+      <section class="pomodoro" aria-labelledby="page-title">
+        <h1 id="page-title" class="visually-hidden">Pomodoro Timer</h1>
+        <p id="focusTime" class="pomodoro-text">you are in focus for: 00:00:00</p>
+        <div class="buttons">
+          <button type="button" class="btn active" id="pomodoro" data-mode="pomodoro">
+            pomodoro
+          </button>
+          <button type="button" class="btn" id="shortBreak" data-mode="shortBreak">
+            short break
+          </button>
+          <button type="button" class="btn" id="longBreak" data-mode="longBreak">
+            long break
+          </button>
+        </div>
+        <div class="timer" role="group" aria-label="Time remaining">
+          <p id="minutes">25</p>
+          <p aria-hidden="true">:</p>
+          <p id="seconds">00</p>
+        </div>
+        <div class="button-timer">
+          <button type="button" class="btn" id="buttonStart" aria-pressed="false">
+            start
+          </button>
+          <button type="button" class="btn" id="buttonPause" aria-pressed="false">
+            pause
+          </button>
+          <button
+            type="button"
+            id="btndots"
+            aria-label="Themes"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </button>
+        </div>
+        <p id="text" aria-live="polite">Time to Focus!</p>
+        <p id="sessionCount" class="session-count" aria-live="polite">
+          Focus sessions: 0/4
+        </p>
+        <div class="containerplay">
+          <button
+            type="button"
+            class="button"
+            id="ambient"
+            aria-label="Play ambient sound"
+            aria-pressed="false"
+          ></button>
+        </div>
+      </section>
     </main>
     <script type="module">
       import { App } from "./src/js/App.js";

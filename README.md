@@ -1,10 +1,16 @@
 # Projeto Pomodoro Timer
 
-A Técnica Pomodoro é um método de gerenciamento de tempo desenvolvido por Francesco Cirillo no final dos anos 1980. A técnica consiste na utilização de um cronômetro para dividir o trabalho em períodos de 25 minutos, separados por breves intervalos.
+Timer da técnica Pomodoro: 25 minutos de foco, intervalo curto de 5 minutos e intervalo longo de 15 minutos a cada 4 sessões.
 
-Tecnologias Utilizadas: HTML, CSS e JavaScript (Puro)
+Tecnologias: HTML, CSS e JavaScript, sem framework. O tempo vive em `src/js/state.js`. A tela só mostra esse estado. O fim do ciclo é um instante (`Date.now()` + o que falta), então a contagem continua certa com a aba em segundo plano.
 
-Conhecimentos Utilizados: Programação Funcional, Manipulação de DOM, Manipulação de BOM, Layout Responsivo, JavaScript ES6, Código Limpo, JavaScript Assíncrono, LocalStorage, IIFE's, utilização da API de notificação do navegador
+- Start, pause e a tecla espaço
+- Ao terminar, o próximo intervalo já fica armado (curto, ou longo a cada 4 focos) e espera o start
+- Tema verde ou rosa, lembrado neste navegador
+- Som de conclusão e ambiente gerados no navegador
+- Notificação no fim do ciclo, pedida no primeiro start, só enquanto o navegador ainda não decidiu
+
+Testes: `npm test`
 
 Link do projeto: https://lucas-pomodoro.vercel.app/
 
