@@ -1,7 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Figtree:wght@400;500;600&display=swap");
 
 :root {
   -webkit-tap-highlight-color: transparent;
+  --display: "Aoboshi One", serif;
+  --sans: "Figtree", sans-serif;
 }
 
 .green-theme {
@@ -18,33 +20,37 @@
   --button-color: whitesmoke;
   --text-color: black;
   --pomodoro-text: whitesmoke;
-  --hover-color: whitesmoke;
-  transition: 0.4s ease-in-out;
+  --hover-color: #e7e7e7;
+  --selected-bg: whitesmoke;
+  --selected-text: #14242c;
+  --selected-hover: #e4e4e4;
+  --plate: rgba(8, 22, 28, 0.42);
+  --plate-border: rgba(255, 255, 255, 0.34);
+  --vignette: rgba(8, 20, 28, 0.28);
+  --track: rgba(255, 255, 255, 0.38);
+  --menu-text: whitesmoke;
+  --menu-border: rgba(255, 255, 255, 0.34);
 }
 
 .pink-theme {
-  background: linear-gradient(
+  --background-color: linear-gradient(
     315deg,
     hsla(345, 95%, 71%, 1) 0%,
     hsla(345, 100%, 88%, 1) 80%
   );
-
-  background: -moz-linear-gradient(
-    315deg,
-    hsla(345, 95%, 71%, 1) 0%,
-    hsla(345, 100%, 88%, 1) 80%
-  );
-
-  background: -webkit-linear-gradient(
-    315deg,
-    hsla(345, 95%, 71%, 1) 0%,
-    hsla(345, 100%, 88%, 1) 80%
-  );
-
-  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#FB6F92", endColorstr="#FFC2D1", GradientType=1 );
+  --button-color: #fff0f3;
   --text-color: #461220;
   --pomodoro-text: #c9184a;
-  --hover-color: #f4f3ee;
+  --hover-color: #ffe4ea;
+  --selected-bg: #c9184a;
+  --selected-text: #fff7f8;
+  --selected-hover: #a31440;
+  --plate: rgba(255, 255, 255, 0.46);
+  --plate-border: rgba(255, 255, 255, 0.72);
+  --vignette: rgba(120, 20, 50, 0.14);
+  --track: rgba(201, 24, 74, 0.28);
+  --menu-text: #461220;
+  --menu-border: rgba(255, 255, 255, 0.72);
 }
 
 * {
@@ -53,48 +59,75 @@
   box-sizing: border-box;
 }
 
+body {
+  min-height: 100vh;
+}
+
 .container {
-  background: var(--background-color);
+  background:
+    radial-gradient(ellipse at center, transparent 42%, var(--vignette) 100%),
+    var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  padding: 24px 16px;
+  transition: background 0.4s ease;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--pomodoro-text);
+  outline-offset: 3px;
 }
 
 #modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  opacity: 0;
-  z-index: 1;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  font-family: "Aoboshi One", serif;
-  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  inset: 0;
+  height: fit-content;
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  border: none;
+  padding: 0;
+  background: transparent;
+  width: min(600px, calc(100vw - 2rem));
+  color: inherit;
 }
 
-#modal.show {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 0.3s;
+#modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  font-size: 1.35rem;
+  line-height: 1.3;
 }
 
 .modal-header button {
   padding: 0.5rem;
   width: 3rem;
+  flex: 0 0 auto;
   cursor: pointer;
   border: none;
   background: transparent;
@@ -106,245 +139,394 @@
 }
 
 .modal-content {
-  margin: 15% auto;
   padding: 20px;
-  width: 80%;
-  max-width: 600px;
   border: 1px solid #888;
   border-radius: 15px;
   background-color: hsl(0, 0%, 96%);
+  font-family: var(--display);
+  color: black;
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
 }
 
-.pomodoro-text {
+.modal-content p {
+  line-height: 1.5;
+  font-family: var(--sans);
+}
+
+.pomodoro {
+  width: min(100%, 480px);
+  padding: 32px 28px 22px;
+  border-radius: 36px;
+  background: var(--plate);
+  border: 1px solid var(--plate-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.buttons {
   display: flex;
   justify-content: center;
-  flex-direction: row;
-  font-size: 1.5rem;
-  user-select: none;
-  color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
-  margin-bottom: 15px;
+  gap: 4px;
 }
 
 .btn {
   cursor: pointer;
-  margin: 5px 5px;
-  padding: 0.5rem 0.1rem;
-  width: 155px;
-  font-size: 1.1rem;
-  line-height: 1.5rem;
-  border: 1px solid var(--pomodoro-text);
-  border-radius: 450px;
-  font-family: "Aoboshi One", serif;
-  background-color: var(--button-color);
-  color: var(--text-color);
-  transition: 0.4s ease-in-out;
+  border: none;
+  background: transparent;
+  color: var(--pomodoro-text);
+  font-family: var(--display);
 }
 
-.btn:hover {
-  color: var(--hover-color);
-  background-color: transparent;
-  transition: 0.4s ease-in-out;
+.buttons .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 0.4rem 0.55rem;
+  border-radius: 999px;
+  font-size: clamp(0.78rem, 2.5vw, 0.98rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0.72;
+  transition: background-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
+}
+
+.buttons .btn:hover {
+  background: transparent;
+  color: var(--pomodoro-text);
+  opacity: 1;
+}
+
+.buttons .btn.active {
+  opacity: 1;
+  background: var(--selected-bg);
+  color: var(--selected-text);
+}
+
+.btn-primary {
+  min-width: 196px;
+  min-height: 48px;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  background: var(--selected-bg);
+  color: var(--selected-text);
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.btn-primary:hover {
+  background: var(--selected-hover);
+  color: var(--selected-text);
+}
+
+.dial {
+  position: relative;
+  width: min(100%, 340px);
+  margin: 18px auto 0;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track,
+.ring-value {
+  fill: none;
+  stroke-width: 2.25;
+}
+
+.ring-track {
+  stroke: var(--track);
+  transition: stroke 0.4s ease;
+}
+
+.ring-value {
+  stroke: var(--pomodoro-text);
+  stroke-linecap: round;
+  stroke-dasharray: 289.027;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s linear, stroke 0.4s ease;
 }
 
 .timer {
+  position: relative;
   display: flex;
   justify-content: center;
   flex-direction: row;
-  font-size: 7.5rem;
+  font-size: clamp(3.4rem, 12vw, 5.2rem);
   user-select: none;
   color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
+  font-family: var(--display);
+  line-height: 1;
+  letter-spacing: 0.03em;
 }
 
-.button-timer {
+#colon {
+  opacity: 0.45;
+  margin: 0 0.02em;
+}
+
+.session-marks {
   display: flex;
   justify-content: center;
+  gap: 8px;
+  margin: 4px 0 0;
 }
 
-#buttonPause {
-  display: none;
+.mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pomodoro-text);
+  background: transparent;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.mark.is-filled {
+  background: var(--pomodoro-text);
 }
 
 #text {
   display: flex;
   justify-content: center;
-  padding-top: 30px;
-  font-size: 2.125rem;
-  font-family: "Aoboshi One", serif;
+  margin-top: 14px;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  font-family: var(--display);
   color: var(--pomodoro-text);
-  transition: 0.5 ease-in-out;
+  text-align: center;
+  transition: color 0.4s ease;
 }
 
-.active {
-  color: var(--hover-color);
-  border: 1px solid var(--pomodoro-text);
-  background-color: transparent;
-  transition: 0.4s;
-}
-
-.containerplay {
+.actions {
   display: flex;
   justify-content: center;
-  margin-top: 14px;
-  width: 100%;
+  margin-top: 12px;
 }
 
-#btndots {
+.focus-line {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-family: var(--sans);
+  font-weight: 500;
+  color: var(--pomodoro-text);
+  opacity: 0.8;
+  transition: color 0.4s ease;
+}
+
+.tools {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pomodoro-text);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.82;
+  cursor: pointer;
+  transition: opacity 0.4s ease, color 0.4s ease;
+}
+
+.tool:hover {
+  background: transparent;
+  color: var(--pomodoro-text);
+  opacity: 1;
+}
+
+.dots {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  align-self: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  height: 45px;
   gap: 3px;
-  margin-left: 5px;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
-  background-color: var(--pomodoro-text);
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
+  background: currentColor;
 }
 
-.button {
-  border: 0;
-  background: transparent;
-  box-sizing: border-box;
-  height: 30px;
-  border-color: transparent transparent transparent var(--pomodoro-text);
-  transition: 0.25s all ease;
-  cursor: pointer;
+.glyph {
+  width: 0;
+  height: 0;
   border-style: solid;
-  border-width: 15px 0 15px 25px;
-}
-.button.paused {
-  border-style: double;
-  border-width: 0px 0px 0px 25px;
+  border-width: 7px 0 7px 12px;
+  border-color: transparent transparent transparent currentColor;
 }
 
-.button:hover {
-  transform: scale(1.1);
+.tool.is-playing .glyph {
+  width: 10px;
+  height: 12px;
+  border-style: solid;
+  border-width: 0 3px;
+  border-color: currentColor;
+}
+
+.text-link {
+  display: block;
+  margin: 4px auto 0;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: var(--pomodoro-text);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: color 0.4s ease, opacity 0.4s ease;
+}
+
+.text-link:hover {
+  opacity: 1;
 }
 
 .menu {
-  color: aliceblue;
+  color: var(--pomodoro-text);
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
-  font-family: "Aoboshi One", serif;
-  width: 35%;
+  inset: 0;
+  z-index: 2;
+  font-family: var(--display);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .menu-header {
   display: flex;
   justify-content: space-between;
-}
-
-.menu-header button img {
-  height: 25px;
-  width: 25px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .menu button {
-  color: whitesmoke;
+  color: var(--menu-text);
   cursor: pointer;
-  font-family: "Aoboshi One", serif;
+  font-family: var(--display);
   background: transparent;
   border: none;
 }
 
-.menu button p {
+#close-menu {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.menu button span {
   font-size: large;
 }
 
 .menu img {
-  height: 80%;
-  width: 80%;
-  object-fit: contain;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.menu-body {
+  display: grid;
+  gap: 16px;
+}
+
+.menu-body button {
+  width: 100%;
+  text-align: left;
 }
 
 .menu-content {
-  margin: 15% auto;
+  width: min(420px, calc(100% - 2rem));
   padding: 20px;
-  width: 100%;
-  border: 1px solid whitesmoke;
-  border-radius: 15px;
-  background-color: transparent;
-  backdrop-filter: blur(20px);
+  border: 1px solid var(--plate-border);
+  border-radius: 28px;
+  background: var(--plate);
+  color: var(--pomodoro-text);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .close {
   width: 25px;
   height: 25px;
   position: relative;
-}
-.close:after {
-  content: "";
-  height: 25px;
-  border-left: 2px solid #fff;
-  position: absolute;
-  transform: rotate(45deg);
-  left: 10px;
+  display: block;
 }
 
+.close:after,
 .close:before {
   content: "";
   height: 25px;
-  border-left: 2px solid #fff;
+  border-left: 2px solid currentColor;
   position: absolute;
-  transform: rotate(-45deg);
   left: 10px;
 }
 
+.close:after {
+  transform: rotate(45deg);
+}
+
+.close:before {
+  transform: rotate(-45deg);
+}
+
 @media only screen and (max-width: 425px) {
-  .container {
-    width: 100dvw;
-    height: 100dvh;
+  .pomodoro {
+    padding: 26px 16px 18px;
   }
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .dial {
+    width: min(100%, 280px);
   }
-  .btn {
-    margin-bottom: 10px;
-    font-size: 1rem;
-  }
-  .timer {
-    font-size: 5rem;
-  }
-  .button-timer {
-    align-items: center;
-    flex-direction: column;
-  }
-  #btndots {
-    height: 40px;
-    flex-direction: row;
-  }
-  .dots {
-    width: 10px;
-    height: 10px;
-  }
-  .menu {
-    width: 95%;
-    height: 100%;
+  #text {
+    font-size: 1.05rem;
   }
 }
 
-@media only screen and (min-width: 768px) {
-  .menu {
-    width: 50%;
-  }
-}
-
-@media only screen and (min-width: 1280px) {
-  .menu {
-    width: 30%;
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .pomodoro,
+  .buttons .btn,
+  .btn-primary,
+  .ring-value,
+  .ring-track,
+  .mark,
+  #text,
+  .focus-line,
+  .tool,
+  .text-link {
+    transition: none;
   }
 }

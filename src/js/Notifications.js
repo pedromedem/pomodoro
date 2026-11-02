@@ -1,15 +1,30 @@
-const Notifications = {
-  requestPermission: async () => {
-    await Notification.requestPermission();
-  },
+const icon = new URL("../imgs/clock.svg", import.meta.url).href;
 
-  showNotification: () => {
-    new Notification("Pomodoro", {
-      body: `Your Timer is Done!`,
-      icon: "./imgs/clock.svg",
-      vibrate: [200, 100, 200],
-    });
-  },
-};
+export function createNotifications() {
+  return {
+    async ensurePermission() {
+      if (!("Notification" in window)) return "unsupported";
+      if (Notification.permission !== "default") return Notification.permission;
+      try {
+        return await Notification.requestPermission();
+      } catch {
+        return Notification.permission;
+      }
+    },
 
-export { Notifications };
+    show(body) {
+      if (!("Notification" in window) || Notification.permission !== "granted") {
+        return;
+      }
+      try {
+        new Notification("Pomodoro", {
+          body,
+          icon,
+          tag: "pomodoro-timer",
+        });
+      } catch {
+        // The constructor throws when permission is revoked between checks.
+      }
+    },
+  };
+}
