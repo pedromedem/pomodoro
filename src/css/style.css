@@ -1,7 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Figtree:wght@400;500;600&display=swap");
 
 :root {
   -webkit-tap-highlight-color: transparent;
+  --display: "Aoboshi One", serif;
+  --sans: "Figtree", sans-serif;
 }
 
 .green-theme {
@@ -22,11 +24,12 @@
   --selected-bg: whitesmoke;
   --selected-text: #14242c;
   --selected-hover: #e4e4e4;
-  --plate: rgba(16, 36, 44, 0.72);
-  --track: rgba(255, 255, 255, 0.35);
+  --plate: rgba(8, 22, 28, 0.42);
+  --plate-border: rgba(255, 255, 255, 0.34);
+  --vignette: rgba(8, 20, 28, 0.28);
+  --track: rgba(255, 255, 255, 0.38);
   --menu-text: whitesmoke;
-  --menu-border: rgba(255, 255, 255, 0.7);
-  --menu-surface: #1b333c;
+  --menu-border: rgba(255, 255, 255, 0.34);
 }
 
 .pink-theme {
@@ -42,11 +45,12 @@
   --selected-bg: #c9184a;
   --selected-text: #fff7f8;
   --selected-hover: #a31440;
-  --plate: rgba(255, 244, 246, 0.88);
+  --plate: rgba(255, 255, 255, 0.46);
+  --plate-border: rgba(255, 255, 255, 0.72);
+  --vignette: rgba(120, 20, 50, 0.14);
   --track: rgba(201, 24, 74, 0.28);
   --menu-text: #461220;
-  --menu-border: #461220;
-  --menu-surface: #fff0f3;
+  --menu-border: rgba(255, 255, 255, 0.72);
 }
 
 * {
@@ -60,7 +64,9 @@ body {
 }
 
 .container {
-  background: var(--background-color);
+  background:
+    radial-gradient(ellipse at center, transparent 42%, var(--vignette) 100%),
+    var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,6 +74,7 @@ body {
   min-height: 100dvh;
   width: 100%;
   padding: 24px 16px;
+  transition: background 0.4s ease;
 }
 
 .visually-hidden {
@@ -136,7 +143,7 @@ button:focus-visible {
   border: 1px solid #888;
   border-radius: 15px;
   background-color: hsl(0, 0%, 96%);
-  font-family: "Aoboshi One", serif;
+  font-family: var(--display);
   color: black;
   max-height: calc(100dvh - 2rem);
   overflow: auto;
@@ -144,75 +151,83 @@ button:focus-visible {
 
 .modal-content p {
   line-height: 1.5;
+  font-family: var(--sans);
 }
 
 .pomodoro {
-  width: min(100%, 520px);
-  padding: 28px 22px 20px;
-  border-radius: 28px;
+  width: min(100%, 480px);
+  padding: 32px 28px 22px;
+  border-radius: 36px;
   background: var(--plate);
+  border: 1px solid var(--plate-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--pomodoro-text);
+  font-family: var(--display);
 }
 
 .buttons .btn {
   flex: 1 1 0;
   min-width: 0;
-  margin: 0;
-  padding: 0.55rem 0.4rem;
-  font-size: 0.95rem;
-}
-
-.btn {
-  cursor: pointer;
-  margin: 4px;
-  padding: 0.55rem 1rem;
-  min-width: 132px;
   min-height: 44px;
-  font-size: 1rem;
-  line-height: 1.3rem;
-  border: 1px solid var(--pomodoro-text);
-  border-radius: 450px;
-  font-family: "Aoboshi One", serif;
-  background-color: transparent;
+  margin: 0;
+  padding: 0.4rem 0.55rem;
+  border-radius: 999px;
+  font-size: clamp(0.78rem, 2.5vw, 0.98rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0.72;
+  transition: background-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
+}
+
+.buttons .btn:hover {
+  background: transparent;
   color: var(--pomodoro-text);
-  transition: color 0.2s ease, background-color 0.2s ease;
+  opacity: 1;
 }
 
-.btn:hover {
-  background-color: var(--button-color);
-  color: var(--text-color);
-}
-
-.btn.active {
-  background-color: var(--selected-bg);
-  border-color: var(--selected-bg);
+.buttons .btn.active {
+  opacity: 1;
+  background: var(--selected-bg);
   color: var(--selected-text);
 }
 
 .btn-primary {
-  min-width: 200px;
+  min-width: 196px;
   min-height: 48px;
-  background-color: var(--selected-bg);
-  border-color: var(--selected-bg);
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  background: var(--selected-bg);
   color: var(--selected-text);
-  font-size: 1.15rem;
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--selected-hover);
-  border-color: var(--selected-hover);
+  background: var(--selected-hover);
   color: var(--selected-text);
 }
 
 .dial {
   position: relative;
-  width: min(100%, 300px);
-  margin: 12px auto 4px;
+  width: min(100%, 340px);
+  margin: 18px auto 0;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -229,11 +244,12 @@ button:focus-visible {
 .ring-track,
 .ring-value {
   fill: none;
-  stroke-width: 3.5;
+  stroke-width: 2.25;
 }
 
 .ring-track {
   stroke: var(--track);
+  transition: stroke 0.4s ease;
 }
 
 .ring-value {
@@ -241,7 +257,7 @@ button:focus-visible {
   stroke-linecap: round;
   stroke-dasharray: 289.027;
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.2s linear;
+  transition: stroke-dashoffset 0.2s linear, stroke 0.4s ease;
 }
 
 .timer {
@@ -252,23 +268,30 @@ button:focus-visible {
   font-size: clamp(3.4rem, 12vw, 5.2rem);
   user-select: none;
   color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
+  font-family: var(--display);
   line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+#colon {
+  opacity: 0.45;
+  margin: 0 0.02em;
 }
 
 .session-marks {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin: 8px 0 4px;
+  gap: 8px;
+  margin: 4px 0 0;
 }
 
 .mark {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 2px solid var(--pomodoro-text);
+  border: 1.5px solid var(--pomodoro-text);
   background: transparent;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .mark.is-filled {
@@ -278,11 +301,13 @@ button:focus-visible {
 #text {
   display: flex;
   justify-content: center;
-  margin-top: 8px;
-  font-size: 1.45rem;
-  font-family: "Aoboshi One", serif;
+  margin-top: 14px;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  font-family: var(--display);
   color: var(--pomodoro-text);
   text-align: center;
+  transition: color 0.4s ease;
 }
 
 .actions {
@@ -292,18 +317,21 @@ button:focus-visible {
 }
 
 .focus-line {
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: center;
-  font-size: 0.95rem;
-  font-family: "Aoboshi One", serif;
+  font-size: 0.85rem;
+  font-family: var(--sans);
+  font-weight: 500;
   color: var(--pomodoro-text);
+  opacity: 0.8;
+  transition: color 0.4s ease;
 }
 
 .tools {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .tool {
@@ -313,19 +341,23 @@ button:focus-visible {
   gap: 8px;
   min-height: 44px;
   min-width: 44px;
-  padding: 8px 14px;
-  border: 1px solid var(--pomodoro-text);
+  padding: 8px 10px;
+  border: none;
   border-radius: 999px;
   background: transparent;
   color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
-  font-size: 1rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.82;
   cursor: pointer;
+  transition: opacity 0.4s ease, color 0.4s ease;
 }
 
 .tool:hover {
-  background: var(--button-color);
-  color: var(--text-color);
+  background: transparent;
+  color: var(--pomodoro-text);
+  opacity: 1;
 }
 
 .dots {
@@ -359,28 +391,35 @@ button:focus-visible {
 
 .text-link {
   display: block;
-  margin: 16px auto 0;
+  margin: 4px auto 0;
   padding: 8px;
   background: none;
   border: none;
   color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
-  font-size: 0.95rem;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.9rem;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  opacity: 0.8;
+  transition: color 0.4s ease, opacity 0.4s ease;
+}
+
+.text-link:hover {
+  opacity: 1;
 }
 
 .menu {
-  color: var(--menu-text);
+  color: var(--pomodoro-text);
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
   inset: 0;
   z-index: 2;
-  font-family: "Aoboshi One", serif;
-  background: rgba(0, 0, 0, 0.62);
+  font-family: var(--display);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .menu-header {
@@ -393,7 +432,7 @@ button:focus-visible {
 .menu button {
   color: var(--menu-text);
   cursor: pointer;
-  font-family: "Aoboshi One", serif;
+  font-family: var(--display);
   background: transparent;
   border: none;
 }
@@ -432,9 +471,12 @@ button:focus-visible {
 .menu-content {
   width: min(420px, calc(100% - 2rem));
   padding: 20px;
-  border: 1px solid var(--menu-border);
-  border-radius: 15px;
-  background-color: var(--menu-surface);
+  border: 1px solid var(--plate-border);
+  border-radius: 28px;
+  background: var(--plate);
+  color: var(--pomodoro-text);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .close {
@@ -462,32 +504,29 @@ button:focus-visible {
 }
 
 @media only screen and (max-width: 425px) {
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .buttons,
-  .actions {
-    width: 100%;
-  }
-  .btn,
-  .btn-primary {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+  .pomodoro {
+    padding: 26px 16px 18px;
   }
   .dial {
-    width: min(100%, 260px);
+    width: min(100%, 280px);
   }
   #text {
-    font-size: 1.3rem;
+    font-size: 1.05rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn,
-  .ring-value {
+  .container,
+  .pomodoro,
+  .buttons .btn,
+  .btn-primary,
+  .ring-value,
+  .ring-track,
+  .mark,
+  #text,
+  .focus-line,
+  .tool,
+  .text-link {
     transition: none;
   }
 }
