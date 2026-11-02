@@ -1,11 +1,8 @@
 import { toggleMenu } from "./Menu.js";
 
 export function bindControls({ timer, audio }) {
-  document.querySelector("#buttonStart")?.addEventListener("click", () => {
-    timer.start();
-  });
-  document.querySelector("#buttonPause")?.addEventListener("click", () => {
-    timer.pause();
+  document.querySelector("#buttonToggle")?.addEventListener("click", () => {
+    timer.toggle();
   });
 
   document.querySelectorAll("[data-mode]").forEach((button) => {
@@ -21,6 +18,7 @@ export function bindControls({ timer, audio }) {
   });
 
   const ambient = document.querySelector("#ambient");
+  const ambientLabel = document.querySelector("#ambientLabel");
   let playing = false;
   ambient?.addEventListener("click", async () => {
     try {
@@ -33,10 +31,9 @@ export function bindControls({ timer, audio }) {
     else audio.stopAmbient();
     ambient.classList.toggle("is-playing", playing);
     ambient.setAttribute("aria-pressed", String(playing));
-    ambient.setAttribute(
-      "aria-label",
-      playing ? "Pause ambient sound" : "Play ambient sound",
-    );
+    const label = playing ? "Som ligado" : "Som";
+    if (ambientLabel) ambientLabel.textContent = label;
+    ambient.setAttribute("aria-label", label);
   });
 
   document.addEventListener("keydown", (event) => {
@@ -44,7 +41,13 @@ export function bindControls({ timer, audio }) {
     const target = event.target;
     if (target instanceof HTMLElement) {
       const tag = target.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable) {
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "BUTTON" ||
+        tag === "A" ||
+        target.isContentEditable
+      ) {
         return;
       }
     }

@@ -20,6 +20,14 @@ export function formatDuration(ms) {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
+export function formatFocus(ms) {
+  const totalMinutes = Math.floor(Math.max(0, Number.isFinite(ms) ? ms : 0) / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${pad(hours)}:${pad(minutes)}`;
+}
+
 export function formatTitle(ms, statusText) {
   const clock = formatClock(ms);
   return `${clock.minutes}:${clock.seconds} | ${statusText}`;

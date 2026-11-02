@@ -1,9 +1,9 @@
 export const POMODOROS_UNTIL_LONG_BREAK = 4;
 
 export const MODES = {
-  pomodoro: { minutes: 25, label: "Time to Focus!" },
-  shortBreak: { minutes: 5, label: "Time for a Break!" },
-  longBreak: { minutes: 15, label: "Time for a Break!" },
+  pomodoro: { minutes: 25, label: "Hora de focar!", name: "Foco 25" },
+  shortBreak: { minutes: 5, label: "Hora da pausa!", name: "Pausa curta 5" },
+  longBreak: { minutes: 15, label: "Hora da pausa!", name: "Pausa longa 15" },
 };
 
 const MINUTE_MS = 60 * 1000;
@@ -23,6 +23,7 @@ export function createInitialState() {
     focusMs: 0,
     segmentStartedAt: null,
     completedPomodoros: 0,
+    awaitingStart: null,
     statusText: MODES.pomodoro.label,
   };
 }
@@ -57,6 +58,7 @@ export function selectMode(state, mode, now) {
     running: false,
     endsAt: null,
     segmentStartedAt: null,
+    awaitingStart: null,
     statusText: spec.label,
   };
 }
@@ -68,8 +70,10 @@ export function startSession(state, now) {
   return {
     ...ready,
     running: true,
+    awaitingStart: null,
     endsAt: now + ready.remainingMs,
     segmentStartedAt: ready.mode === "pomodoro" ? now : null,
+    statusText: MODES[ready.mode].label,
   };
 }
 
@@ -78,7 +82,13 @@ export function pauseSession(state, now) {
 
   const remainingMs = Math.max(0, state.endsAt - now);
   return flushFocus(
-    { ...state, running: false, endsAt: null, remainingMs },
+    {
+      ...state,
+      running: false,
+      endsAt: null,
+      remainingMs,
+      statusText: "Pausado",
+    },
     now,
   );
 }
@@ -116,24 +126,43 @@ function finishSession(state, now) {
       completedPomodoros % POMODOROS_UNTIL_LONG_BREAK === 0
         ? "longBreak"
         : "shortBreak";
-    return selectMode({ ...stopped, completedPomodoros }, nextMode, now);
+    return {
+      ...selectMode({ ...stopped, completedPomodoros }, nextMode, now),
+      awaitingStart: "break",
+      statusText: "Foco concluído",
+    };
   }
 
-  return selectMode(stopped, "pomodoro", now);
+  return {
+    ...selectMode(stopped, "pomodoro", now),
+    awaitingStart: "focus",
+    statusText: "Pausa concluída",
+  };
+}
+
+export function filledSessions(completedPomodoros, mode) {
+  const cycle = completedPomodoros % POMODOROS_UNTIL_LONG_BREAK;
+  if (mode === "longBreak" && cycle === 0 && completedPomodoros > 0) {
+    return POMODOROS_UNTIL_LONG_BREAK;
+  }
+  return cycle;
 }
 
 export function sessionLabel(completedPomodoros, mode) {
-  const cycle = completedPomodoros % POMODOROS_UNTIL_LONG_BREAK;
-  const shown =
-    mode === "longBreak" && cycle === 0 && completedPomodoros > 0
-      ? POMODOROS_UNTIL_LONG_BREAK
-      : cycle;
-  return `Focus sessions: ${shown}/${POMODOROS_UNTIL_LONG_BREAK}`;
+  return `Focos: ${filledSessions(completedPomodoros, mode)} de ${POMODOROS_UNTIL_LONG_BREAK}`;
+}
+
+export function actionLabel(state) {
+  if (state.running) return "Pausar";
+  if (state.awaitingStart === "break") return "Começar intervalo";
+  if (state.awaitingStart === "focus") return "Voltar ao foco";
+  if (state.remainingMs < state.durationMs) return "Continuar";
+  return "Começar";
 }
 
 export function completionMessage(endedMode) {
   if (endedMode === "pomodoro") {
-    return "Focus session complete. Time for a break.";
+    return "Foco concluído. Hora da pausa.";
   }
-  return "Break is over. Time to focus.";
+  return "Pausa encerrada. Hora de focar.";
 }

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pomodoro Timer</title>
-    <meta name="title" content="Pomodoro Timer" />
+    <title>Timer Pomodoro</title>
+    <meta name="title" content="Timer Pomodoro" />
     <meta
       name="description"
-      content="A simple, clear, and functional Pomodoro timer."
+      content="Um timer Pomodoro simples, claro e direto."
     />
     <meta name="keywords" content="pomodoro, pomodoro online, lucas pomodoro" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://lucas-pomodoro.vercel.app/" />
-    <meta property="og:title" content="Pomodoro Timer" />
+    <meta property="og:title" content="Timer Pomodoro" />
     <meta
       property="og:description"
-      content="A simple, clear, and functional Pomodoro timer."
+      content="Um timer Pomodoro simples, claro e direto."
     />
     <meta
       property="og:image"
@@ -25,10 +25,10 @@
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://lucas-pomodoro.vercel.app/" />
-    <meta name="twitter:title" content="Pomodoro Timer" />
+    <meta name="twitter:title" content="Timer Pomodoro" />
     <meta
       name="twitter:description"
-      content="A simple, clear, and functional Pomodoro timer."
+      content="Um timer Pomodoro simples, claro e direto."
     />
     <meta
       name="twitter:image"
@@ -53,73 +53,87 @@
     <dialog id="modal" aria-labelledby="modal-title">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 id="modal-title">What is the Pomodoro Technique?</h2>
-          <button type="button" id="closeModal" aria-label="Close">
+          <h2 id="modal-title">O que é a técnica Pomodoro?</h2>
+          <button type="button" id="closeModal" aria-label="Fechar">
             <img src="./src/imgs/xx.png" alt="" />
           </button>
         </div>
         <p>
-          The Pomodoro Technique was developed in the late 1980s by then
-          university student Francesco Cirillo. Cirillo was struggling to
-          focus on his studies and complete assignments. Feeling overwhelmed,
-          he asked himself to commit to just 10 minutes of focused study time.
-          Encouraged by the challenge, he found a tomato (pomodoro in Italian)
-          shaped kitchen timer, and the Pomodoro technique was born.
+          A técnica Pomodoro foi criada no fim dos anos 1980 pelo então
+          universitário Francesco Cirillo. Ele tinha dificuldade de manter o
+          foco nos estudos e de terminar as tarefas. Sobrecarregado, propôs a
+          si mesmo só 10 minutos de estudo concentrado. Encorajado pelo
+          desafio, encontrou um timer de cozinha em forma de tomate (pomodoro,
+          em italiano), e a técnica nasceu.
         </p>
       </div>
     </dialog>
     <main class="container">
       <section class="pomodoro" aria-labelledby="page-title">
-        <h1 id="page-title" class="visually-hidden">Pomodoro Timer</h1>
-        <p id="focusTime" class="pomodoro-text">you are in focus for: 00:00:00</p>
+        <h1 id="page-title" class="visually-hidden">Timer Pomodoro</h1>
         <div class="buttons">
-          <button type="button" class="btn active" id="pomodoro" data-mode="pomodoro">
-            pomodoro
+          <button type="button" class="btn active" id="pomodoro" data-mode="pomodoro" aria-pressed="true">
+            Foco 25
           </button>
-          <button type="button" class="btn" id="shortBreak" data-mode="shortBreak">
-            short break
+          <button type="button" class="btn" id="shortBreak" data-mode="shortBreak" aria-pressed="false">
+            Pausa curta 5
           </button>
-          <button type="button" class="btn" id="longBreak" data-mode="longBreak">
-            long break
+          <button type="button" class="btn" id="longBreak" data-mode="longBreak" aria-pressed="false">
+            Pausa longa 15
           </button>
         </div>
-        <div class="timer" role="group" aria-label="Time remaining">
-          <p id="minutes">25</p>
-          <p aria-hidden="true">:</p>
-          <p id="seconds">00</p>
+        <div class="dial">
+          <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="ring-track" cx="50" cy="50" r="46"></circle>
+            <circle class="ring-value" id="ringValue" cx="50" cy="50" r="46"></circle>
+          </svg>
+          <div class="timer" role="group" aria-label="Tempo restante">
+            <p id="minutes">25</p>
+            <p aria-hidden="true">:</p>
+            <p id="seconds">00</p>
+          </div>
         </div>
-        <div class="button-timer">
-          <button type="button" class="btn" id="buttonStart" aria-pressed="false">
-            start
+        <div class="session-marks" id="sessionMarks" role="img" aria-label="Focos: 0 de 4">
+          <span class="mark"></span>
+          <span class="mark"></span>
+          <span class="mark"></span>
+          <span class="mark"></span>
+        </div>
+        <p id="text" aria-live="polite">Hora de focar!</p>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="buttonToggle" aria-pressed="false">
+            Começar
           </button>
-          <button type="button" class="btn" id="buttonPause" aria-pressed="false">
-            pause
-          </button>
+        </div>
+        <p id="focusTime" class="focus-line">em foco há 00:00</p>
+        <div class="tools">
           <button
             type="button"
+            class="tool"
             id="btndots"
-            aria-label="Themes"
+            aria-label="Tema"
             aria-haspopup="dialog"
             aria-expanded="false"
           >
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dots" aria-hidden="true">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </span>
+            <span>Tema</span>
           </button>
-        </div>
-        <p id="text" aria-live="polite">Time to Focus!</p>
-        <p id="sessionCount" class="session-count" aria-live="polite">
-          Focus sessions: 0/4
-        </p>
-        <div class="containerplay">
           <button
             type="button"
-            class="button"
+            class="tool"
             id="ambient"
-            aria-label="Play ambient sound"
+            aria-label="Som"
             aria-pressed="false"
-          ></button>
+          >
+            <span class="glyph" aria-hidden="true"></span>
+            <span id="ambientLabel">Som</span>
+          </button>
         </div>
+        <button type="button" class="text-link" id="about">O que é o Pomodoro?</button>
       </section>
     </main>
     <script type="module">

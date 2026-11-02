@@ -18,9 +18,15 @@
   --button-color: whitesmoke;
   --text-color: black;
   --pomodoro-text: whitesmoke;
-  --hover-color: whitesmoke;
+  --hover-color: #e7e7e7;
+  --selected-bg: whitesmoke;
+  --selected-text: #14242c;
+  --selected-hover: #e4e4e4;
+  --plate: rgba(16, 36, 44, 0.72);
+  --track: rgba(255, 255, 255, 0.35);
   --menu-text: whitesmoke;
-  --menu-border: whitesmoke;
+  --menu-border: rgba(255, 255, 255, 0.7);
+  --menu-surface: #1b333c;
 }
 
 .pink-theme {
@@ -32,9 +38,15 @@
   --button-color: #fff0f3;
   --text-color: #461220;
   --pomodoro-text: #c9184a;
-  --hover-color: #f4f3ee;
+  --hover-color: #ffe4ea;
+  --selected-bg: #c9184a;
+  --selected-text: #fff7f8;
+  --selected-hover: #a31440;
+  --plate: rgba(255, 244, 246, 0.88);
+  --track: rgba(201, 24, 74, 0.28);
   --menu-text: #461220;
   --menu-border: #461220;
+  --menu-surface: #fff0f3;
 }
 
 * {
@@ -135,135 +147,228 @@ button:focus-visible {
 }
 
 .pomodoro {
-  width: min(100%, 560px);
-}
-
-.pomodoro-text {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  font-size: 1.5rem;
-  user-select: none;
-  color: var(--pomodoro-text);
-  font-family: "Aoboshi One", serif;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.session-count {
-  margin-top: 8px;
-  text-align: center;
-  font-family: "Aoboshi One", serif;
-  color: var(--pomodoro-text);
+  width: min(100%, 520px);
+  padding: 28px 22px 20px;
+  border-radius: 28px;
+  background: var(--plate);
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.buttons .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0.55rem 0.4rem;
+  font-size: 0.95rem;
 }
 
 .btn {
   cursor: pointer;
-  margin: 5px 5px;
-  padding: 0.5rem 0.1rem;
-  width: 155px;
-  font-size: 1.1rem;
-  line-height: 1.5rem;
+  margin: 4px;
+  padding: 0.55rem 1rem;
+  min-width: 132px;
+  min-height: 44px;
+  font-size: 1rem;
+  line-height: 1.3rem;
   border: 1px solid var(--pomodoro-text);
   border-radius: 450px;
   font-family: "Aoboshi One", serif;
-  background-color: var(--button-color);
-  color: var(--text-color);
-  transition: color 0.4s ease-in-out, background-color 0.4s ease-in-out,
-    border-color 0.4s ease-in-out;
+  background-color: transparent;
+  color: var(--pomodoro-text);
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .btn:hover {
-  color: var(--hover-color);
-  background-color: transparent;
+  background-color: var(--button-color);
+  color: var(--text-color);
+}
+
+.btn.active {
+  background-color: var(--selected-bg);
+  border-color: var(--selected-bg);
+  color: var(--selected-text);
+}
+
+.btn-primary {
+  min-width: 200px;
+  min-height: 48px;
+  background-color: var(--selected-bg);
+  border-color: var(--selected-bg);
+  color: var(--selected-text);
+  font-size: 1.15rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--selected-hover);
+  border-color: var(--selected-hover);
+  color: var(--selected-text);
+}
+
+.dial {
+  position: relative;
+  width: min(100%, 300px);
+  margin: 12px auto 4px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track,
+.ring-value {
+  fill: none;
+  stroke-width: 3.5;
+}
+
+.ring-track {
+  stroke: var(--track);
+}
+
+.ring-value {
+  stroke: var(--pomodoro-text);
+  stroke-linecap: round;
+  stroke-dasharray: 289.027;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s linear;
 }
 
 .timer {
+  position: relative;
   display: flex;
   justify-content: center;
   flex-direction: row;
-  font-size: 7.5rem;
+  font-size: clamp(3.4rem, 12vw, 5.2rem);
   user-select: none;
   color: var(--pomodoro-text);
   font-family: "Aoboshi One", serif;
+  line-height: 1;
 }
 
-.button-timer {
+.session-marks {
   display: flex;
   justify-content: center;
-  align-items: center;
+  gap: 10px;
+  margin: 8px 0 4px;
+}
+
+.mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--pomodoro-text);
+  background: transparent;
+}
+
+.mark.is-filled {
+  background: var(--pomodoro-text);
 }
 
 #text {
   display: flex;
   justify-content: center;
-  padding-top: 30px;
-  font-size: 2.125rem;
+  margin-top: 8px;
+  font-size: 1.45rem;
   font-family: "Aoboshi One", serif;
   color: var(--pomodoro-text);
   text-align: center;
-  transition: color 0.4s ease-in-out;
 }
 
-.active {
-  color: var(--hover-color);
-  border: 1px solid var(--pomodoro-text);
-  background-color: transparent;
-}
-
-.containerplay {
+.actions {
   display: flex;
   justify-content: center;
-  margin-top: 14px;
-  width: 100%;
+  margin-top: 12px;
 }
 
-#btndots {
+.focus-line {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-family: "Aoboshi One", serif;
+  color: var(--pomodoro-text);
+}
+
+.tools {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--pomodoro-text);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pomodoro-text);
+  font-family: "Aoboshi One", serif;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.tool:hover {
+  background: var(--button-color);
+  color: var(--text-color);
+}
+
+.dots {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  align-self: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  height: 45px;
   gap: 3px;
-  margin-left: 5px;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
-  background-color: var(--pomodoro-text);
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
+  background: currentColor;
 }
 
-.button {
-  border: 0;
-  background: transparent;
-  box-sizing: border-box;
-  height: 30px;
-  border-color: transparent transparent transparent var(--pomodoro-text);
-  transition: transform 0.25s ease;
-  cursor: pointer;
+.glyph {
+  width: 0;
+  height: 0;
   border-style: solid;
-  border-width: 15px 0 15px 25px;
+  border-width: 7px 0 7px 12px;
+  border-color: transparent transparent transparent currentColor;
 }
 
-.button.is-playing {
-  border-style: double;
-  border-width: 0 0 0 25px;
+.tool.is-playing .glyph {
+  width: 10px;
+  height: 12px;
+  border-style: solid;
+  border-width: 0 3px;
+  border-color: currentColor;
 }
 
-.button:hover {
-  transform: scale(1.1);
+.text-link {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: var(--pomodoro-text);
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 .menu {
@@ -275,6 +380,7 @@ button:focus-visible {
   inset: 0;
   z-index: 2;
   font-family: "Aoboshi One", serif;
+  background: rgba(0, 0, 0, 0.62);
 }
 
 .menu-header {
@@ -290,6 +396,13 @@ button:focus-visible {
   font-family: "Aoboshi One", serif;
   background: transparent;
   border: none;
+}
+
+#close-menu {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
 }
 
 .menu button span {
@@ -321,8 +434,7 @@ button:focus-visible {
   padding: 20px;
   border: 1px solid var(--menu-border);
   border-radius: 15px;
-  background-color: transparent;
-  backdrop-filter: blur(20px);
+  background-color: var(--menu-surface);
 }
 
 .close {
@@ -355,33 +467,27 @@ button:focus-visible {
     flex-direction: column;
     align-items: center;
   }
-  .btn {
-    margin-bottom: 10px;
-    font-size: 1rem;
+  .buttons,
+  .actions {
+    width: 100%;
   }
-  .timer {
-    font-size: 5rem;
-  }
-  .button-timer {
-    align-items: center;
-    flex-direction: column;
-  }
-  #btndots {
-    height: 40px;
-    flex-direction: row;
+  .btn,
+  .btn-primary {
+    width: 100%;
     margin-left: 0;
-    margin-top: 8px;
+    margin-right: 0;
   }
-  .pomodoro-text,
+  .dial {
+    width: min(100%, 260px);
+  }
   #text {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
-  #text,
-  .button {
+  .ring-value {
     transition: none;
   }
 }

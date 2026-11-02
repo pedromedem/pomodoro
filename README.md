@@ -4,8 +4,9 @@ Timer da técnica Pomodoro: 25 minutos de foco, intervalo curto de 5 minutos e i
 
 Tecnologias: HTML, CSS e JavaScript, sem framework. O tempo vive em `src/js/state.js`. A tela só mostra esse estado. O fim do ciclo é um instante (`Date.now()` + o que falta), então a contagem continua certa com a aba em segundo plano.
 
-- Start, pause e a tecla espaço
-- Ao terminar, o próximo intervalo já fica armado (curto, ou longo a cada 4 focos) e espera o start
+- Um botão: Começar, Pausar, Continuar, Começar intervalo ou Voltar ao foco
+- A barra de espaço faz o mesmo quando o foco não está num botão
+- Ao terminar, a tela diz o que acabou e o próximo intervalo fica armado (curto, ou longo a cada 4 focos)
 - Tema verde ou rosa, lembrado neste navegador
 - Som de conclusão e ambiente gerados no navegador
 - Notificação no fim do ciclo, pedida no primeiro start, só enquanto o navegador ainda não decidiu

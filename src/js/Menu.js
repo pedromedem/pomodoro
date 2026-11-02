@@ -36,7 +36,7 @@ function themeButton(id, label, src, theme) {
 
   const image = document.createElement("img");
   image.src = src;
-  image.alt = `${label} preview`;
+  image.alt = `Prévia do ${label.toLowerCase()}`;
 
   button.append(text, image);
   button.addEventListener("click", () => {
@@ -51,7 +51,7 @@ function openMenu() {
   menu.className = "menu";
   menu.setAttribute("role", "dialog");
   menu.setAttribute("aria-modal", "true");
-  menu.setAttribute("aria-label", "Themes");
+  menu.setAttribute("aria-label", "Temas");
 
   const content = document.createElement("div");
   content.className = "menu-content";
@@ -60,12 +60,12 @@ function openMenu() {
   header.className = "menu-header";
 
   const title = document.createElement("p");
-  title.textContent = "Themes";
+  title.textContent = "Temas";
 
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.id = "close-menu";
-  closeButton.setAttribute("aria-label", "Close themes");
+  closeButton.setAttribute("aria-label", "Fechar temas");
   const closeIcon = document.createElement("span");
   closeIcon.className = "close";
   closeIcon.setAttribute("aria-hidden", "true");
@@ -77,8 +77,8 @@ function openMenu() {
   const body = document.createElement("div");
   body.className = "menu-body";
   body.append(
-    themeButton("pink-theme", "Pink theme", pinkSrc, "pink"),
-    themeButton("green-theme", "Green theme", greenSrc, "green"),
+    themeButton("pink-theme", "Tema rosa", pinkSrc, "pink"),
+    themeButton("green-theme", "Tema verde", greenSrc, "green"),
   );
 
   content.append(header, body);

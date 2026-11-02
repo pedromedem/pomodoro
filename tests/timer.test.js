@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { formatClock, formatDuration, formatTitle } from "../src/js/format.js";
+import { formatClock, formatDuration, formatFocus, formatTitle } from "../src/js/format.js";
 import {
+  actionLabel,
   completionMessage,
   createInitialState,
   pauseSession,
@@ -41,8 +42,14 @@ describe("format", () => {
     assert.equal(formatDuration(61_000), "00:01:01");
   });
 
+  it("shows focus time in hours and minutes", () => {
+    assert.equal(formatFocus(0), "00:00");
+    assert.equal(formatFocus(61_000), "00:01");
+    assert.equal(formatFocus(3_600_000), "01:00");
+  });
+
   it("builds the tab title from the clock and the status", () => {
-    assert.equal(formatTitle(POMODORO_MS, "Time to Focus!"), "25:00 | Time to Focus!");
+    assert.equal(formatTitle(POMODORO_MS, "Hora de focar!"), "25:00 | Hora de focar!");
   });
 });
 
@@ -67,7 +74,10 @@ describe("timer state", () => {
     assert.equal(result.state.running, false);
     assert.equal(result.state.remainingMs, 5 * 60 * 1000);
     assert.equal(result.state.completedPomodoros, 1);
-    assert.equal(completionMessage(result.endedMode), "Focus session complete. Time for a break.");
+    assert.equal(result.state.awaitingStart, "break");
+    assert.equal(result.state.statusText, "Foco concluído");
+    assert.equal(actionLabel(result.state), "Começar intervalo");
+    assert.equal(completionMessage(result.endedMode), "Foco concluído. Hora da pausa.");
   });
 
   it("does not finish one millisecond early", () => {
@@ -96,7 +106,8 @@ describe("timer state", () => {
 
     assert.equal(state.mode, "longBreak");
     assert.equal(state.completedPomodoros, 4);
-    assert.equal(sessionLabel(4, "longBreak"), "Focus sessions: 4/4");
+    assert.equal(state.awaitingStart, "break");
+    assert.equal(sessionLabel(4, "longBreak"), "Focos: 4 de 4");
   });
 
   it("returns to focus when a break ends and keeps the session count", () => {
@@ -107,7 +118,10 @@ describe("timer state", () => {
     assert.equal(result.state.mode, "pomodoro");
     assert.equal(result.state.completedPomodoros, 2);
     assert.equal(result.state.remainingMs, POMODORO_MS);
-    assert.equal(completionMessage("shortBreak"), "Break is over. Time to focus.");
+    assert.equal(result.state.awaitingStart, "focus");
+    assert.equal(result.state.statusText, "Pausa concluída");
+    assert.equal(actionLabel(result.state), "Voltar ao foco");
+    assert.equal(completionMessage("shortBreak"), "Pausa encerrada. Hora de focar.");
   });
 
   it("restarts the current mode when start is pressed at zero", () => {
@@ -129,6 +143,10 @@ describe("timer state", () => {
 
     const resumed = startSession(paused, 30_000);
     assert.equal(resumed.endsAt, 30_000 + paused.remainingMs);
+    assert.equal(paused.statusText, "Pausado");
+    assert.equal(actionLabel(paused), "Continuar");
+    assert.equal(actionLabel(resumed), "Pausar");
+    assert.equal(resumed.statusText, "Hora de focar!");
   });
 
   it("counts focus time only while a pomodoro is running", () => {
@@ -145,6 +163,20 @@ describe("timer state", () => {
     state = startSession(selectMode(state, "shortBreak", 30_000), 30_000);
     state = pauseSession(state, 40_000);
     assert.equal(state.focusMs, 15_000);
+  });
+
+  it("names the idle action Começar", () => {
+    const state = createInitialState();
+    assert.equal(actionLabel(state), "Começar");
+    assert.equal(state.statusText, "Hora de focar!");
+  });
+
+  it("clears the handoff when a mode is chosen by hand", () => {
+    const finished = tick(startSession(createInitialState(), 0), POMODORO_MS).state;
+    const chosen = selectMode(finished, "pomodoro", 10);
+    assert.equal(chosen.awaitingStart, null);
+    assert.equal(chosen.statusText, "Hora de focar!");
+    assert.equal(actionLabel(chosen), "Começar");
   });
 
   it("ignores an unknown mode", () => {
