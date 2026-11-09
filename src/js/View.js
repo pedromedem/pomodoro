@@ -42,7 +42,7 @@ export function createView() {
         state.durationMs > 0
           ? Math.min(1, Math.max(0, state.remainingMs / state.durationMs))
           : 0;
-      ring.style.strokeDashoffset = String(RING_LENGTH * (1 - ratio));
+      ring.style.strokeDashoffset = String(-RING_LENGTH * (1 - ratio));
 
       const filled = filledSessions(state.completedPomodoros, state.mode);
       marks.forEach((mark, index) => {

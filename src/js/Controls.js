@@ -31,7 +31,7 @@ export function bindControls({ timer, audio }) {
     else audio.stopAmbient();
     ambient.classList.toggle("is-playing", playing);
     ambient.setAttribute("aria-pressed", String(playing));
-    const label = playing ? "Som ligado" : "Som";
+    const label = playing ? "Música ligada" : "Música";
     if (ambientLabel) ambientLabel.textContent = label;
     ambient.setAttribute("aria-label", label);
   });
