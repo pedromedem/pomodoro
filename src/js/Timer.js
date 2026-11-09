@@ -1,89 +1,78 @@
-import { Buttons } from "./Buttons.js";
-import { Formatter } from "./Formatter.js";
-import { Music } from "./Music.js";
-import { Notifications } from "./Notifications.js";
+import {
+  completionMessage,
+  createInitialState,
+  pauseSession,
+  selectMode,
+  startSession,
+  tick,
+} from "./state.js";
 
-const Timer = {
-  minutes: document.querySelector("#minutes"),
-  seconds: document.querySelector("#seconds"),
-  text: document.querySelector("#text"),
+const TICK_MS = 200;
 
-  countdownInterval: null,
+export function createTimer({ view, audio, notifications }) {
+  let state = createInitialState();
+  let intervalId = null;
 
-  setTimer(mins = "25", secs = "00", timerText = "Time to Focus!") {
-    clearInterval(this.countdownInterval);
-    this.countdownInterval = null;
+  function publish() {
+    view.render(state, Date.now());
+  }
 
-    this.minutes.textContent = mins;
-    this.seconds.textContent = secs;
-    this.text.textContent = timerText;
+  function stopLoop() {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
 
-    Formatter.formatTitle(mins, secs, text);
+  function startLoop() {
+    if (intervalId != null) return;
+    intervalId = setInterval(catchUp, TICK_MS);
+  }
 
-    Buttons.shortBrakeButton.classList.remove("active");
-    Buttons.longBrakeButton.classList.remove("active");
-    Buttons.buttonStart.classList.remove("active");
-
-    buttonPause.style.display = "none";
-  },
-
-  initTimer() {
-    let mins = this.minutes.textContent;
-    let secs = this.seconds.textContent;
-
-    if (secs == 0) {
-      secs = 59;
-      mins--;
-    } else {
-      secs--;
+  function catchUp() {
+    const result = tick(state, Date.now());
+    state = result.state;
+    publish();
+    if (!result.finished) {
+      if (!state.running) stopLoop();
+      return;
     }
+    stopLoop();
+    notifications.show(completionMessage(result.endedMode));
+    Promise.resolve()
+      .then(() => audio.playDone())
+      .catch(() => {});
+  }
 
-    Formatter.formatTime(mins, secs);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") catchUp();
+  });
 
-    Formatter.formatTitle(mins, secs, text);
-  },
+  publish();
 
-  endTimer() {
-    clearInterval(this.countdownInterval);
-    Music.playAudio();
-    Notifications.showNotification();
-
-    buttonPause.style.display = "none";
-    buttonStart.classList.remove("active");
-    this.countdownInterval = null;
-
-    text.textContent = "Your Timer is Done!";
-  },
-
-  start() {
-    let mins = this.minutes.textContent;
-    let secs = this.seconds.textContent;
-
-    if (this.countdownInterval === null) {
-      if (mins > 0 || secs > 0) {
-        Music.playAudio();
-
-        buttonPause.style.display = "block";
-        buttonPause.classList.remove("active");
-        buttonStart.classList.add("active");
-
-        this.countdownInterval = setInterval(() => {
-          let mins = this.minutes.textContent;
-          let secs = this.seconds.textContent;
-          mins == 0 && secs == 0 ? this.endTimer() : this.initTimer();
-        }, 1000);
-      } else {
-        window.alert("Select a Timer");
-      }
-    }
-  },
-
-  pause() {
-    clearInterval(this.countdownInterval);
-    this.countdownInterval = null;
-    buttonPause.classList.add("active");
-    buttonStart.classList.remove("active");
-  },
-};
-
-export { Timer };
+  return {
+    getState() {
+      return state;
+    },
+    start() {
+      audio.playStart();
+      Promise.resolve(notifications.ensurePermission()).catch(() => {});
+      state = startSession(state, Date.now());
+      publish();
+      if (state.running) startLoop();
+    },
+    pause() {
+      state = pauseSession(state, Date.now());
+      stopLoop();
+      publish();
+    },
+    toggle() {
+      if (state.running) this.pause();
+      else this.start();
+    },
+    setMode(mode) {
+      state = selectMode(state, mode, Date.now());
+      stopLoop();
+      publish();
+    },
+    catchUp,
+  };
+}
