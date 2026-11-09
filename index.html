@@ -37,19 +37,20 @@
 
     <link rel="stylesheet" href="./src/css/style.css" />
     <link rel="icon" href="./src/imgs/clock.svg" type="image/svg+xml" />
-  </head>
-
-  <body class="green-theme">
     <script>
       try {
-        if (localStorage.getItem("pomodoro.theme") === "pink") {
-          document.body.classList.remove("green-theme");
-          document.body.classList.add("pink-theme");
-        }
+        var saved = localStorage.getItem("pomodoro.theme");
+        var dark =
+          saved === "dark" ||
+          (saved !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
       } catch (error) {
-        // Theme falls back to green when storage is unavailable.
+        // Theme follows the page default when storage is unavailable.
       }
     </script>
+  </head>
+
+  <body>
     <dialog id="modal" aria-labelledby="modal-title">
       <div class="modal-content">
         <div class="modal-header">
@@ -88,8 +89,14 @@
         </div>
         <div class="dial">
           <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f858a8"></stop>
+                <stop offset="100%" stop-color="#6425f9"></stop>
+              </linearGradient>
+            </defs>
             <circle class="ring-track" cx="50" cy="50" r="46"></circle>
-            <circle class="ring-value" id="ringValue" cx="50" cy="50" r="46"></circle>
+            <circle class="ring-value" id="ringValue" cx="50" cy="50" r="46" stroke="url(#accent)"></circle>
           </svg>
           <div class="timer" role="group" aria-label="Tempo restante">
             <p id="minutes">25</p>
@@ -116,14 +123,20 @@
             class="tool"
             id="btndots"
             aria-label="Tema"
-            aria-haspopup="dialog"
-            aria-expanded="false"
+            aria-pressed="false"
           >
-            <span class="dots" aria-hidden="true">
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </span>
+            <svg class="theme-icon moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M21 14.5A8.5 8.5 0 0 1 9.5 3 7 7 0 1 0 21 14.5z"
+              ></path>
+            </svg>
+            <svg class="theme-icon sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+              </g>
+            </svg>
             <span>Tema</span>
           </button>
           <button

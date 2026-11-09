@@ -7,8 +7,8 @@ Tecnologias: HTML, CSS e JavaScript, sem framework. O tempo vive em `src/js/stat
 - Um botão: Começar, Pausar, Continuar, Começar intervalo ou Voltar ao foco
 - A barra de espaço faz o mesmo quando o foco não está num botão
 - Ao terminar, a tela diz o que acabou e o próximo intervalo fica armado (curto, ou longo a cada 4 focos)
-- Tema verde ou rosa, lembrado neste navegador
-- Som de conclusão e ambiente gerados no navegador
+- Tema claro ou escuro, no mesmo tom do portfólio, lembrado neste navegador
+- Música “A New Town” (CC0) e um sino ao começar e ao terminar
 - Notificação no fim do ciclo, pedida no primeiro start, só enquanto o navegador ainda não decidiu
 
 Testes: `npm test`

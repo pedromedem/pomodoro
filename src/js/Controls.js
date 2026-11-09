@@ -1,4 +1,4 @@
-import { toggleMenu } from "./Menu.js";
+import { toggleTheme } from "./Theme.js";
 
 export function bindControls({ timer, audio }) {
   document.querySelector("#buttonToggle")?.addEventListener("click", () => {
@@ -14,7 +14,7 @@ export function bindControls({ timer, audio }) {
   });
 
   document.querySelector("#btndots")?.addEventListener("click", () => {
-    toggleMenu();
+    toggleTheme();
   });
 
   const ambient = document.querySelector("#ambient");
