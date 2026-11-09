@@ -1,29 +1,56 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Figtree:wght@400;500;600&display=swap");
 
 :root {
   -webkit-tap-highlight-color: transparent;
-  --sans: "Montserrat", sans-serif;
-  --bg: #f5f5f4;
-  --text: #333333;
-  --card: #ffffff;
-  --line: #171717;
-  --track: rgba(23, 23, 23, 0.14);
-  --shadow: 0 8px 24px rgba(16, 15, 15, 0.08);
-  --tools-bg: rgba(255, 255, 255, 0.4);
-  --selection-bg: #262626;
-  --selection-text: #e5e5e5;
+  --display: "Aoboshi One", serif;
+  --sans: "Figtree", sans-serif;
 }
 
-html.dark {
-  --bg: #171717;
-  --text: #bbbbbb;
-  --card: #262626;
-  --line: #bbbbbb;
-  --track: rgba(255, 255, 255, 0.18);
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --tools-bg: rgba(18, 17, 19, 0.4);
-  --selection-bg: #f5f5f5;
-  --selection-text: #262626;
+.green-theme {
+  --background-color: linear-gradient(
+    315deg,
+    hsla(136, 85%, 74%, 1) 0%,
+    hsla(139, 41%, 60%, 1) 15%,
+    hsla(181, 38%, 46%, 1) 48%,
+    hsla(184, 38%, 44%, 1) 53%,
+    hsla(199, 35%, 37%, 1) 66%,
+    hsla(211, 27%, 30%, 1) 80%,
+    hsla(230, 17%, 27%, 1) 94%
+  );
+  --button-color: whitesmoke;
+  --text-color: black;
+  --pomodoro-text: whitesmoke;
+  --hover-color: #e7e7e7;
+  --selected-bg: whitesmoke;
+  --selected-text: #14242c;
+  --selected-hover: #e4e4e4;
+  --plate: rgba(8, 22, 28, 0.42);
+  --plate-border: rgba(255, 255, 255, 0.34);
+  --vignette: rgba(8, 20, 28, 0.28);
+  --track: rgba(255, 255, 255, 0.38);
+  --menu-text: whitesmoke;
+  --menu-border: rgba(255, 255, 255, 0.34);
+}
+
+.pink-theme {
+  --background-color: linear-gradient(
+    315deg,
+    hsla(345, 95%, 71%, 1) 0%,
+    hsla(345, 100%, 88%, 1) 80%
+  );
+  --button-color: #fff0f3;
+  --text-color: #461220;
+  --pomodoro-text: #c9184a;
+  --hover-color: #ffe4ea;
+  --selected-bg: #c9184a;
+  --selected-text: #fff7f8;
+  --selected-hover: #a31440;
+  --plate: rgba(255, 255, 255, 0.46);
+  --plate-border: rgba(255, 255, 255, 0.72);
+  --vignette: rgba(120, 20, 50, 0.14);
+  --track: rgba(201, 24, 74, 0.28);
+  --menu-text: #461220;
+  --menu-border: rgba(255, 255, 255, 0.72);
 }
 
 * {
@@ -32,21 +59,14 @@ html.dark {
   box-sizing: border-box;
 }
 
-::selection {
-  background: var(--selection-bg);
-  color: var(--selection-text);
-}
-
 body {
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .container {
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at center, transparent 42%, var(--vignette) 100%),
+    var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,7 +74,7 @@ body {
   min-height: 100dvh;
   width: 100%;
   padding: 24px 16px;
-  transition: background-color 0.5s ease;
+  transition: background 0.4s ease;
 }
 
 .visually-hidden {
@@ -70,7 +90,7 @@ body {
 }
 
 button:focus-visible {
-  outline: 2px solid var(--text);
+  outline: 2px solid var(--pomodoro-text);
   outline-offset: 3px;
 }
 
@@ -102,7 +122,6 @@ button:focus-visible {
 .modal-header h2 {
   font-size: 1.35rem;
   line-height: 1.3;
-  font-weight: 900;
 }
 
 .modal-header button {
@@ -119,36 +138,31 @@ button:focus-visible {
   height: 100%;
 }
 
-html.dark .modal-header button img {
-  filter: invert(1);
-}
-
 .modal-content {
   padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background-color: var(--card);
-  font-family: var(--sans);
-  color: var(--text);
+  border: 1px solid #888;
+  border-radius: 15px;
+  background-color: hsl(0, 0%, 96%);
+  font-family: var(--display);
+  color: black;
   max-height: calc(100dvh - 2rem);
   overflow: auto;
 }
 
 .modal-content p {
   line-height: 1.5;
-}
-
-.modal-content p + p {
-  margin-top: 12px;
+  font-family: var(--sans);
 }
 
 .pomodoro {
   width: min(100%, 480px);
   padding: 32px 28px 22px;
-  border-radius: 24px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+  border-radius: 36px;
+  background: var(--plate);
+  border: 1px solid var(--plate-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
 .buttons {
@@ -161,67 +175,53 @@ html.dark .modal-header button img {
   cursor: pointer;
   border: none;
   background: transparent;
-  color: var(--text);
-  font-family: var(--sans);
+  color: var(--pomodoro-text);
+  font-family: var(--display);
 }
 
 .buttons .btn {
-  position: relative;
   flex: 1 1 0;
   min-width: 0;
   min-height: 44px;
   margin: 0;
   padding: 0.4rem 0.55rem;
-  border-radius: 8px;
-  font-size: clamp(0.78rem, 2.5vw, 0.95rem);
-  font-weight: 700;
+  border-radius: 999px;
+  font-size: clamp(0.78rem, 2.5vw, 0.98rem);
   line-height: 1.2;
   white-space: nowrap;
-  transition: color 0.3s ease, background 0.3s ease;
+  opacity: 0.72;
+  transition: background-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
 }
 
-.buttons .btn::after {
-  content: "";
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: 6px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.buttons .btn:hover::after {
-  transform: scaleX(1);
+.buttons .btn:hover {
+  background: transparent;
+  color: var(--pomodoro-text);
+  opacity: 1;
 }
 
 .buttons .btn.active {
-  color: #ffffff;
-  background: linear-gradient(to right, #ec4899, #8b5cf6);
-}
-
-.buttons .btn.active::after {
-  display: none;
+  opacity: 1;
+  background: var(--selected-bg);
+  color: var(--selected-text);
 }
 
 .btn-primary {
   min-width: 196px;
   min-height: 48px;
   padding: 0.7rem 1.6rem;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text);
+  border-radius: 999px;
+  background: var(--selected-bg);
+  color: var(--selected-text);
+  font-family: var(--sans);
   font-size: 1.05rem;
-  font-weight: 700;
-  transition: transform 0.3s ease, border-color 0.5s ease, color 0.5s ease;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .btn-primary:hover {
-  transform: scale(1.1);
-  background: transparent;
-  color: var(--text);
+  background: var(--selected-hover);
+  color: var(--selected-text);
 }
 
 .dial {
@@ -249,13 +249,15 @@ html.dark .modal-header button img {
 
 .ring-track {
   stroke: var(--track);
+  transition: stroke 0.4s ease;
 }
 
 .ring-value {
+  stroke: var(--pomodoro-text);
   stroke-linecap: round;
   stroke-dasharray: 289.027;
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.2s linear;
+  transition: stroke-dashoffset 0.2s linear, stroke 0.4s ease;
 }
 
 .timer {
@@ -265,11 +267,10 @@ html.dark .modal-header button img {
   flex-direction: row;
   font-size: clamp(3.4rem, 12vw, 5.2rem);
   user-select: none;
-  color: var(--text);
-  font-family: var(--sans);
-  font-weight: 900;
+  color: var(--pomodoro-text);
+  font-family: var(--display);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.03em;
 }
 
 #colon {
@@ -288,14 +289,13 @@ html.dark .modal-header button img {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: 1.5px solid var(--text);
+  border: 1.5px solid var(--pomodoro-text);
   background: transparent;
-  transition: background-color 0.5s ease, border-color 0.5s ease;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .mark.is-filled {
-  background: linear-gradient(to right, #ec4899, #8b5cf6);
-  border-color: transparent;
+  background: var(--pomodoro-text);
 }
 
 #text {
@@ -303,13 +303,11 @@ html.dark .modal-header button img {
   justify-content: center;
   margin-top: 14px;
   font-size: 1.15rem;
-  font-weight: 900;
-  font-family: var(--sans);
+  letter-spacing: 0.04em;
+  font-family: var(--display);
+  color: var(--pomodoro-text);
   text-align: center;
-  background: linear-gradient(to right, #ec4899, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  transition: color 0.4s ease;
 }
 
 .actions {
@@ -323,21 +321,17 @@ html.dark .modal-header button img {
   text-align: center;
   font-size: 0.85rem;
   font-family: var(--sans);
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 500;
+  color: var(--pomodoro-text);
   opacity: 0.8;
+  transition: color 0.4s ease;
 }
 
 .tools {
   display: flex;
   justify-content: center;
-  width: fit-content;
-  margin: 16px auto 0;
-  padding: 0 6px;
-  border: 1px solid rgba(107, 114, 128, 0.2);
-  border-radius: 14px;
-  background: var(--tools-bg);
-  backdrop-filter: blur(4px);
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .tool {
@@ -347,33 +341,36 @@ html.dark .modal-header button img {
   gap: 8px;
   min-height: 44px;
   min-width: 44px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border: none;
+  border-radius: 999px;
   background: transparent;
-  color: var(--text);
+  color: var(--pomodoro-text);
   font-family: var(--sans);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
+  opacity: 0.82;
   cursor: pointer;
-}
-
-.tool + .tool {
-  border-left: 1px solid var(--line);
+  transition: opacity 0.4s ease, color 0.4s ease;
 }
 
 .tool:hover {
   background: transparent;
+  color: var(--pomodoro-text);
+  opacity: 1;
 }
 
-.theme-icon {
-  width: 19px;
-  height: 19px;
-  display: block;
+.dots {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-html:not(.dark) .sun,
-html.dark .moon {
-  display: none;
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .glyph {
@@ -394,50 +391,142 @@ html.dark .moon {
 
 .text-link {
   display: block;
-  margin: 8px auto 0;
+  margin: 4px auto 0;
   padding: 8px;
   background: none;
   border: none;
-  color: var(--text);
+  color: var(--pomodoro-text);
   font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  opacity: 0.8;
+  transition: color 0.4s ease, opacity 0.4s ease;
+}
+
+.text-link:hover {
+  opacity: 1;
+}
+
+.menu {
+  color: var(--pomodoro-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  font-family: var(--display);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.menu button {
+  color: var(--menu-text);
+  cursor: pointer;
+  font-family: var(--display);
+  background: transparent;
+  border: none;
+}
+
+#close-menu {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.menu button span {
+  font-size: large;
+}
+
+.menu img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.menu-body {
+  display: grid;
+  gap: 16px;
+}
+
+.menu-body button {
+  width: 100%;
+  text-align: left;
+}
+
+.menu-content {
+  width: min(420px, calc(100% - 2rem));
+  padding: 20px;
+  border: 1px solid var(--plate-border);
+  border-radius: 28px;
+  background: var(--plate);
+  color: var(--pomodoro-text);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.close {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  display: block;
+}
+
+.close:after,
+.close:before {
+  content: "";
+  height: 25px;
+  border-left: 2px solid currentColor;
+  position: absolute;
+  left: 10px;
+}
+
+.close:after {
+  transform: rotate(45deg);
+}
+
+.close:before {
+  transform: rotate(-45deg);
 }
 
 @media only screen and (max-width: 425px) {
   .pomodoro {
     padding: 26px 16px 18px;
   }
-
   .dial {
     width: min(100%, 280px);
   }
-
   #text {
     font-size: 1.05rem;
-  }
-
-  .btn-primary:hover {
-    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body,
   .container,
   .pomodoro,
   .buttons .btn,
-  .buttons .btn::after,
   .btn-primary,
   .ring-value,
-  .mark {
+  .ring-track,
+  .mark,
+  #text,
+  .focus-line,
+  .tool,
+  .text-link {
     transition: none;
-  }
-
-  .btn-primary:hover {
-    transform: none;
   }
 }
