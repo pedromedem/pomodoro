@@ -53,9 +53,7 @@ export function createTimer({ view, audio, notifications }) {
       return state;
     },
     start() {
-      Promise.resolve(audio.resume())
-        .then(() => audio.playStart())
-        .catch(() => {});
+      audio.playStart();
       Promise.resolve(notifications.ensurePermission()).catch(() => {});
       state = startSession(state, Date.now());
       publish();

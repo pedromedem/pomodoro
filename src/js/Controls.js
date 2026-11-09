@@ -20,12 +20,7 @@ export function bindControls({ timer, audio }) {
   const ambient = document.querySelector("#ambient");
   const ambientLabel = document.querySelector("#ambientLabel");
   let playing = false;
-  ambient?.addEventListener("click", async () => {
-    try {
-      await audio.resume();
-    } catch {
-      return;
-    }
+  ambient?.addEventListener("click", () => {
     playing = !playing;
     if (playing) audio.startAmbient();
     else audio.stopAmbient();
