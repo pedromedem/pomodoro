@@ -27,15 +27,18 @@
 .pink-theme {
   --background-color: linear-gradient(
     315deg,
-    hsla(345, 95%, 71%, 1) 0%,
-    hsla(345, 100%, 88%, 1) 80%
+    #ffc2d1 0%,
+    #fb6f92 20%,
+    #be123c 48%,
+    #9f1239 72%,
+    #4c0519 100%
   );
-  --button-color: #fff0f3;
-  --text-color: #461220;
-  --pomodoro-text: #c9184a;
-  --hover-color: #c9184a;
-  --track: rgba(201, 24, 74, 0.28);
-  --menu-border: #c9184a;
+  --button-color: whitesmoke;
+  --text-color: #4c0519;
+  --pomodoro-text: whitesmoke;
+  --hover-color: whitesmoke;
+  --track: rgba(255, 255, 255, 0.38);
+  --menu-border: whitesmoke;
 }
 
 * {
