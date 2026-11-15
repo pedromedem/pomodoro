@@ -1,45 +1,129 @@
-const Menu = {
-  render() {
-    const menu = document.createElement("div");
+import { applyTheme } from "./Theme.js";
 
-    menu.classList.add("menu");
+let menuElement = null;
+let onKeyDown = null;
 
-    menu.innerHTML = `
-    <div class="menu-content">
-      <div class="menu-header">
-      <p>Themes:</p>
-        <button id="close-menu">
-          <div class="close"> </div>
-        </button>
-      </div>
-      <div class="menu-body">
-        <button id="pink-theme"> <p> Pink Theme:</p> <img src="../src/imgs/img-pink.png"></button>
-        <button id="green-theme"> <p> Green Theme:</p> <img src="../src/imgs/img-project.png"></button>
-      </div>
-    </div>
-    `;
+const pinkSrc = new URL("../imgs/img-pink.png", import.meta.url).href;
+const greenSrc = new URL("../imgs/img-project.png", import.meta.url).href;
 
-    const closeMenu = menu.querySelector("#close-menu");
+export function closeMenu() {
+  if (onKeyDown) {
+    document.removeEventListener("keydown", onKeyDown);
+    onKeyDown = null;
+  }
+  menuElement?.remove();
+  menuElement = null;
+  const opener = document.querySelector("#btndots");
+  opener?.setAttribute("aria-expanded", "false");
+  return opener;
+}
 
-    closeMenu.addEventListener("click", () => {
-      menu.remove();
-    });
+export function toggleMenu(audio) {
+  if (menuElement) {
+    closeMenu()?.focus();
+    return;
+  }
+  openMenu(audio);
+}
 
-    const pinkTheme = menu.querySelector("#pink-theme");
-    const greenTheme = menu.querySelector("#green-theme");
+function themeButton(id, label, src, theme) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.id = id;
 
-    pinkTheme.addEventListener("click", () => {
-      document.body.classList.add("pink-theme");
-      document.body.classList.remove("green-theme");
-    });
+  const text = document.createElement("span");
+  text.textContent = label;
 
-    greenTheme.addEventListener("click", () => {
-      document.body.classList.add("green-theme");
-      document.body.classList.remove("pink-theme");
-    });
+  const image = document.createElement("img");
+  image.src = src;
+  image.alt = `Prévia do ${label.toLowerCase()}`;
 
-    document.querySelector(".container").appendChild(menu);
-  },
-};
+  button.append(text, image);
+  button.addEventListener("click", () => {
+    applyTheme(theme);
+    closeMenu()?.focus();
+  });
+  return button;
+}
 
-export { Menu };
+function volumeControl(label, value, onInput) {
+  const field = document.createElement("label");
+  field.className = "volume";
+
+  const name = document.createElement("span");
+  name.textContent = label;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = "0";
+  slider.max = "1";
+  slider.step = "0.05";
+  slider.value = String(value);
+  slider.setAttribute("aria-label", label);
+  slider.addEventListener("input", () => {
+    onInput(Number(slider.value));
+  });
+  slider.addEventListener("click", (event) => event.stopPropagation());
+
+  field.append(name, slider);
+  return field;
+}
+
+function openMenu(audio) {
+  const menu = document.createElement("div");
+  menu.className = "menu";
+  menu.setAttribute("role", "dialog");
+  menu.setAttribute("aria-modal", "true");
+  menu.setAttribute("aria-label", "Ajustes");
+
+  const content = document.createElement("div");
+  content.className = "menu-content";
+
+  const header = document.createElement("div");
+  header.className = "menu-header";
+
+  const title = document.createElement("p");
+  title.textContent = "Ajustes";
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.id = "close-menu";
+  closeButton.setAttribute("aria-label", "Fechar ajustes");
+  const closeIcon = document.createElement("span");
+  closeIcon.className = "close";
+  closeIcon.setAttribute("aria-hidden", "true");
+  closeButton.append(closeIcon);
+  closeButton.addEventListener("click", () => closeMenu()?.focus());
+
+  header.append(title, closeButton);
+
+  const body = document.createElement("div");
+  body.className = "menu-body";
+  body.append(
+    themeButton("pink-theme", "Tema rosa", pinkSrc, "pink"),
+    themeButton("green-theme", "Tema verde", greenSrc, "green"),
+    volumeControl("Harpa", audio?.musicVolume?.() ?? 0.45, (value) => {
+      audio?.setMusicVolume(value);
+    }),
+    volumeControl("Sino", audio?.bellVolume?.() ?? 0.55, (value) => {
+      audio?.setBellVolume(value);
+    }),
+  );
+
+  content.append(header, body);
+  menu.append(content);
+  content.addEventListener("click", (event) => event.stopPropagation());
+  menu.addEventListener("click", () => closeMenu()?.focus());
+
+  document.querySelector(".container")?.append(menu);
+  menuElement = menu;
+  document.querySelector("#btndots")?.setAttribute("aria-expanded", "true");
+  closeButton.focus();
+
+  onKeyDown = (event) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    closeMenu()?.focus();
+  };
+  document.addEventListener("keydown", onKeyDown);
+}
