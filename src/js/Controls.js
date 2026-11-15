@@ -18,17 +18,14 @@ export function bindControls({ timer, audio }) {
   });
 
   const ambient = document.querySelector("#ambient");
-  const ambientLabel = document.querySelector("#ambientLabel");
   let playing = false;
   ambient?.addEventListener("click", () => {
     playing = !playing;
     if (playing) audio.startAmbient();
     else audio.stopAmbient();
-    ambient.classList.toggle("is-playing", playing);
+    ambient.classList.toggle("paused", playing);
     ambient.setAttribute("aria-pressed", String(playing));
-    const label = playing ? "Música ligada" : "Música";
-    if (ambientLabel) ambientLabel.textContent = label;
-    ambient.setAttribute("aria-label", label);
+    ambient.setAttribute("aria-label", playing ? "Música ligada" : "Música");
   });
 
   document.addEventListener("keydown", (event) => {

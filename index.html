@@ -104,38 +104,25 @@
           <span class="mark"></span>
         </div>
         <p id="text" aria-live="polite">Hora de focar!</p>
-        <div class="actions">
-          <button type="button" class="btn btn-primary" id="buttonToggle" aria-pressed="false">
+        <div class="button-timer">
+          <button type="button" class="btn" id="buttonToggle" aria-pressed="false">
             Começar
           </button>
-        </div>
-        <p id="focusTime" class="focus-line">em foco há 00:00</p>
-        <div class="tools">
           <button
             type="button"
-            class="tool"
             id="btndots"
             aria-label="Tema"
             aria-haspopup="dialog"
             aria-expanded="false"
           >
-            <span class="dots" aria-hidden="true">
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </span>
-            <span>Tema</span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
           </button>
-          <button
-            type="button"
-            class="tool"
-            id="ambient"
-            aria-label="Música"
-            aria-pressed="false"
-          >
-            <span class="glyph" aria-hidden="true"></span>
-            <span id="ambientLabel">Música</span>
-          </button>
+        </div>
+        <p id="focusTime" class="focus-line">em foco há 00:00</p>
+        <div class="containerplay">
+          <button type="button" class="button" id="ambient" aria-label="Música" aria-pressed="false"></button>
         </div>
         <button type="button" class="text-link" id="about">O que é o Pomodoro?</button>
       </section>

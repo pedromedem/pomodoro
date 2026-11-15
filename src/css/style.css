@@ -1,9 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Figtree:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aoboshi+One&display=swap");
 
 :root {
   -webkit-tap-highlight-color: transparent;
   --display: "Aoboshi One", serif;
-  --sans: "Figtree", sans-serif;
 }
 
 .green-theme {
@@ -20,16 +19,9 @@
   --button-color: whitesmoke;
   --text-color: black;
   --pomodoro-text: whitesmoke;
-  --hover-color: #e7e7e7;
-  --selected-bg: whitesmoke;
-  --selected-text: #14242c;
-  --selected-hover: #e4e4e4;
-  --plate: rgba(8, 22, 28, 0.42);
-  --plate-border: rgba(255, 255, 255, 0.34);
-  --vignette: rgba(8, 20, 28, 0.28);
-  --track: rgba(255, 255, 255, 0.38);
-  --menu-text: whitesmoke;
-  --menu-border: rgba(255, 255, 255, 0.34);
+  --hover-color: whitesmoke;
+  --track: rgba(255, 255, 255, 0.35);
+  --menu-border: whitesmoke;
 }
 
 .pink-theme {
@@ -41,16 +33,9 @@
   --button-color: #fff0f3;
   --text-color: #461220;
   --pomodoro-text: #c9184a;
-  --hover-color: #ffe4ea;
-  --selected-bg: #c9184a;
-  --selected-text: #fff7f8;
-  --selected-hover: #a31440;
-  --plate: rgba(255, 255, 255, 0.46);
-  --plate-border: rgba(255, 255, 255, 0.72);
-  --vignette: rgba(120, 20, 50, 0.14);
+  --hover-color: #c9184a;
   --track: rgba(201, 24, 74, 0.28);
-  --menu-text: #461220;
-  --menu-border: rgba(255, 255, 255, 0.72);
+  --menu-border: #c9184a;
 }
 
 * {
@@ -59,22 +44,25 @@
   box-sizing: border-box;
 }
 
+html,
 body {
-  min-height: 100vh;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--display);
 }
 
 .container {
-  background:
-    radial-gradient(ellipse at center, transparent 42%, var(--vignette) 100%),
-    var(--background-color);
+  background: var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  padding: 24px 16px;
-  transition: background 0.4s ease;
+  padding: 16px;
+  transition: background 0.4s ease-in-out;
 }
 
 .visually-hidden {
@@ -122,6 +110,7 @@ button:focus-visible {
 .modal-header h2 {
   font-size: 1.35rem;
   line-height: 1.3;
+  font-family: var(--display);
 }
 
 .modal-header button {
@@ -151,83 +140,52 @@ button:focus-visible {
 
 .modal-content p {
   line-height: 1.5;
-  font-family: var(--sans);
+}
+
+.modal-content p + p {
+  margin-top: 12px;
 }
 
 .pomodoro {
-  width: min(100%, 480px);
-  padding: 32px 28px 22px;
-  border-radius: 36px;
-  background: var(--plate);
-  border: 1px solid var(--plate-border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  transition: background 0.4s ease, border-color 0.4s ease;
+  width: min(100%, 720px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .btn {
   cursor: pointer;
-  border: none;
-  background: transparent;
-  color: var(--pomodoro-text);
-  font-family: var(--display);
-}
-
-.buttons .btn {
-  flex: 1 1 0;
-  min-width: 0;
+  margin: 5px;
+  padding: 0.5rem 1rem;
+  min-width: 155px;
   min-height: 44px;
-  margin: 0;
-  padding: 0.4rem 0.55rem;
-  border-radius: 999px;
-  font-size: clamp(0.78rem, 2.5vw, 0.98rem);
-  line-height: 1.2;
-  white-space: nowrap;
-  opacity: 0.72;
-  transition: background-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  border: 1px solid var(--pomodoro-text);
+  border-radius: 450px;
+  font-family: var(--display);
+  background-color: var(--button-color);
+  color: var(--text-color);
+  transition: 0.4s ease-in-out;
 }
 
-.buttons .btn:hover {
-  background: transparent;
-  color: var(--pomodoro-text);
-  opacity: 1;
-}
-
-.buttons .btn.active {
-  opacity: 1;
-  background: var(--selected-bg);
-  color: var(--selected-text);
-}
-
-.btn-primary {
-  min-width: 196px;
-  min-height: 48px;
-  padding: 0.7rem 1.6rem;
-  border-radius: 999px;
-  background: var(--selected-bg);
-  color: var(--selected-text);
-  font-family: var(--sans);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
-
-.btn-primary:hover {
-  background: var(--selected-hover);
-  color: var(--selected-text);
+.btn:hover,
+.buttons .btn.active,
+#buttonToggle[aria-pressed="true"] {
+  color: var(--hover-color);
+  background-color: transparent;
 }
 
 .dial {
   position: relative;
-  width: min(100%, 340px);
-  margin: 18px auto 0;
+  width: min(100%, 400px);
+  margin: 0 auto;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -244,7 +202,7 @@ button:focus-visible {
 .ring-track,
 .ring-value {
   fill: none;
-  stroke-width: 2.25;
+  stroke-width: 1.75;
 }
 
 .ring-track {
@@ -265,29 +223,23 @@ button:focus-visible {
   display: flex;
   justify-content: center;
   flex-direction: row;
-  font-size: clamp(3.4rem, 12vw, 5.2rem);
+  font-size: 7.5rem;
   user-select: none;
   color: var(--pomodoro-text);
   font-family: var(--display);
   line-height: 1;
-  letter-spacing: 0.03em;
-}
-
-#colon {
-  opacity: 0.45;
-  margin: 0 0.02em;
 }
 
 .session-marks {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin: 4px 0 0;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .mark {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 1.5px solid var(--pomodoro-text);
   background: transparent;
@@ -301,113 +253,91 @@ button:focus-visible {
 #text {
   display: flex;
   justify-content: center;
-  margin-top: 14px;
-  font-size: 1.15rem;
-  letter-spacing: 0.04em;
+  padding-top: 8px;
+  font-size: 2.125rem;
   font-family: var(--display);
   color: var(--pomodoro-text);
   text-align: center;
-  transition: color 0.4s ease;
 }
 
-.actions {
+.button-timer {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
-}
-
-.focus-line {
-  margin-top: 14px;
-  text-align: center;
-  font-size: 0.85rem;
-  font-family: var(--sans);
-  font-weight: 500;
-  color: var(--pomodoro-text);
-  opacity: 0.8;
-  transition: color 0.4s ease;
-}
-
-.tools {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.tool {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 8px 10px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--pomodoro-text);
-  font-family: var(--sans);
-  font-size: 0.95rem;
-  font-weight: 500;
-  opacity: 0.82;
-  cursor: pointer;
-  transition: opacity 0.4s ease, color 0.4s ease;
+  margin-top: 8px;
 }
 
-.tool:hover {
-  background: transparent;
-  color: var(--pomodoro-text);
-  opacity: 1;
-}
-
-.dots {
+#btndots {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  align-self: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 45px;
   gap: 3px;
+  margin-left: 5px;
+  padding: 4px;
 }
 
 .dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.glyph {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 7px 0 7px 12px;
-  border-color: transparent transparent transparent currentColor;
-}
-
-.tool.is-playing .glyph {
   width: 10px;
-  height: 12px;
+  height: 10px;
+  background-color: var(--pomodoro-text);
+  border-radius: 50%;
+}
+
+.focus-line {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 1rem;
+  font-family: var(--display);
+  color: var(--pomodoro-text);
+}
+
+.containerplay {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.button {
+  border: 0;
+  background: transparent;
+  box-sizing: border-box;
+  height: 30px;
+  border-color: transparent transparent transparent var(--pomodoro-text);
+  transition: 0.25s all ease;
+  cursor: pointer;
   border-style: solid;
-  border-width: 0 3px;
-  border-color: currentColor;
+  border-width: 15px 0 15px 25px;
+  padding: 0;
+}
+
+.button.paused {
+  border-style: double;
+  border-width: 0 0 0 25px;
+}
+
+.button:hover {
+  transform: scale(1.1);
 }
 
 .text-link {
   display: block;
-  margin: 4px auto 0;
+  margin: 10px auto 0;
   padding: 8px;
   background: none;
   border: none;
   color: var(--pomodoro-text);
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-family: var(--display);
+  font-size: 1rem;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-  opacity: 0.8;
-  transition: color 0.4s ease, opacity 0.4s ease;
-}
-
-.text-link:hover {
-  opacity: 1;
 }
 
 .menu {
@@ -419,7 +349,7 @@ button:focus-visible {
   inset: 0;
   z-index: 2;
   font-family: var(--display);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .menu-header {
@@ -430,7 +360,7 @@ button:focus-visible {
 }
 
 .menu button {
-  color: var(--menu-text);
+  color: var(--pomodoro-text);
   cursor: pointer;
   font-family: var(--display);
   background: transparent;
@@ -471,12 +401,12 @@ button:focus-visible {
 .menu-content {
   width: min(420px, calc(100% - 2rem));
   padding: 20px;
-  border: 1px solid var(--plate-border);
-  border-radius: 28px;
-  background: var(--plate);
+  border: 1px solid var(--menu-border);
+  border-radius: 15px;
+  background: transparent;
   color: var(--pomodoro-text);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .close {
@@ -504,29 +434,41 @@ button:focus-visible {
 }
 
 @media only screen and (max-width: 425px) {
-  .pomodoro {
-    padding: 26px 16px 18px;
+  .buttons,
+  .button-timer {
+    flex-direction: column;
   }
+
+  #btndots {
+    height: 40px;
+    flex-direction: row;
+    margin: 6px 0 0;
+  }
+
+  .timer {
+    font-size: 5rem;
+  }
+
   .dial {
-    width: min(100%, 280px);
+    width: min(100%, 320px);
   }
+
   #text {
-    font-size: 1.05rem;
+    font-size: 1.6rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .container,
-  .pomodoro,
-  .buttons .btn,
-  .btn-primary,
+  .btn,
   .ring-value,
   .ring-track,
   .mark,
-  #text,
-  .focus-line,
-  .tool,
-  .text-link {
+  .button {
     transition: none;
+  }
+
+  .button:hover {
+    transform: none;
   }
 }
