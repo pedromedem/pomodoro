@@ -5,7 +5,9 @@ import {
   actionLabel,
   completionMessage,
   createInitialState,
+  nextStepLabel,
   pauseSession,
+  restartSession,
   selectMode,
   sessionLabel,
   startSession,
@@ -169,6 +171,29 @@ describe("timer state", () => {
     const state = createInitialState();
     assert.equal(actionLabel(state), "Começar");
     assert.equal(state.statusText, "Hora de focar!");
+    assert.equal(nextStepLabel(state), "Depois: pausa curta");
+  });
+
+  it("names a long break before the fourth focus finishes", () => {
+    const state = { ...createInitialState(), completedPomodoros: 3 };
+    assert.equal(nextStepLabel(state), "Depois: pausa longa");
+    assert.equal(nextStepLabel(selectMode(state, "longBreak", 0)), "Depois: foco");
+  });
+
+  it("restarts the current stretch without starting it", () => {
+    const running = startSession(createInitialState(), 0);
+    const paused = pauseSession(running, 12_000);
+    const restarted = restartSession(
+      { ...paused, completedPomodoros: 2, awaitingStart: "break" },
+      20_000,
+    );
+
+    assert.equal(restarted.running, false);
+    assert.equal(restarted.remainingMs, POMODORO_MS);
+    assert.equal(restarted.endsAt, null);
+    assert.equal(restarted.completedPomodoros, 2);
+    assert.equal(restarted.awaitingStart, null);
+    assert.equal(actionLabel(restarted), "Começar");
   });
 
   it("clears the handoff when a mode is chosen by hand", () => {

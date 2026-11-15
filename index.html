@@ -70,6 +70,10 @@
           A música é “A New Town”, de The Cynic Project, e o sino é de PWL.
           As duas faixas estão em domínio público (CC0).
         </p>
+        <p>
+          Atalhos: 1 foco, 2 pausa curta, 3 pausa longa, R recomeça o trecho,
+          espaço começa ou pausa.
+        </p>
       </div>
     </dialog>
     <main class="container">
@@ -104,23 +108,38 @@
           <span class="mark"></span>
         </div>
         <p id="text" aria-live="polite">Hora de focar!</p>
+        <p id="nextStep" class="next-step">Depois: pausa curta</p>
         <div class="button-timer">
           <button type="button" class="btn" id="buttonToggle" aria-pressed="false">
             Começar
           </button>
-          <button
-            type="button"
-            id="btndots"
-            aria-label="Tema"
-            aria-haspopup="dialog"
-            aria-expanded="false"
-          >
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </button>
+          <div class="side-controls">
+            <button type="button" id="buttonRestart" aria-label="Recomeçar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"
+                ></path>
+              </svg>
+            </button>
+            <button
+              type="button"
+              id="btndots"
+              aria-label="Ajustes"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+            >
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </button>
+          </div>
         </div>
-        <p id="focusTime" class="focus-line">em foco há 00:00</p>
+        <p id="focusTime" class="focus-line" hidden>em foco há 00:00</p>
         <div class="containerplay">
           <button type="button" class="button" id="ambient" aria-label="Música" aria-pressed="false"></button>
         </div>

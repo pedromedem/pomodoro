@@ -14,7 +14,11 @@ export function bindControls({ timer, audio }) {
   });
 
   document.querySelector("#btndots")?.addEventListener("click", () => {
-    toggleMenu();
+    toggleMenu(audio);
+  });
+
+  document.querySelector("#buttonRestart")?.addEventListener("click", () => {
+    timer.restart();
   });
 
   const ambient = document.querySelector("#ambient");
@@ -29,24 +33,40 @@ export function bindControls({ timer, audio }) {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.code !== "Space") return;
+    if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
+    if (document.querySelector("dialog[open]") || document.querySelector(".menu")) return;
+
     const target = event.target;
-    if (target instanceof HTMLElement) {
-      const tag = target.tagName;
-      if (
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "BUTTON" ||
-        tag === "A" ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-    }
-    if (document.querySelector("dialog[open]") || document.querySelector(".menu")) {
+    const tag = target instanceof HTMLElement ? target.tagName : "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || target instanceof HTMLElement && target.isContentEditable) {
       return;
     }
-    event.preventDefault();
-    timer.toggle();
+
+    const modes = {
+      Digit1: "pomodoro",
+      Digit2: "shortBreak",
+      Digit3: "longBreak",
+      Numpad1: "pomodoro",
+      Numpad2: "shortBreak",
+      Numpad3: "longBreak",
+    };
+
+    if (event.code === "Space") {
+      if (tag === "BUTTON" || tag === "A") return;
+      event.preventDefault();
+      timer.toggle();
+      return;
+    }
+
+    if (modes[event.code]) {
+      event.preventDefault();
+      timer.setMode(modes[event.code]);
+      return;
+    }
+
+    if (event.code === "KeyR") {
+      event.preventDefault();
+      timer.restart();
+    }
   });
 }

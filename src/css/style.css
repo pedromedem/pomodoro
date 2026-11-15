@@ -260,6 +260,14 @@ button:focus-visible {
   text-align: center;
 }
 
+.next-step {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-family: var(--display);
+  color: var(--pomodoro-text);
+}
+
 .button-timer {
   display: flex;
   justify-content: center;
@@ -267,19 +275,35 @@ button:focus-visible {
   margin-top: 8px;
 }
 
+.side-controls {
+  display: flex;
+  align-items: center;
+}
+
+#buttonRestart,
 #btndots {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  align-self: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
+  color: var(--pomodoro-text);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px;
+}
+
+#buttonRestart svg {
+  width: 22px;
+  height: 22px;
+}
+
+#btndots {
+  flex-direction: column;
   height: 45px;
   gap: 3px;
-  margin-left: 5px;
-  padding: 4px;
+  margin-left: 2px;
 }
 
 .dot {
@@ -393,6 +417,19 @@ button:focus-visible {
   gap: 16px;
 }
 
+.volume {
+  display: grid;
+  gap: 6px;
+  color: var(--pomodoro-text);
+  font-family: var(--display);
+  font-size: 1.05rem;
+}
+
+.volume input {
+  width: 100%;
+  accent-color: currentColor;
+}
+
 .menu-body button {
   width: 100%;
   text-align: left;
@@ -439,10 +476,13 @@ button:focus-visible {
     flex-direction: column;
   }
 
+  .side-controls {
+    margin-top: 4px;
+  }
+
   #btndots {
-    height: 40px;
-    flex-direction: row;
-    margin: 6px 0 0;
+    flex-direction: column;
+    height: 45px;
   }
 
   .timer {

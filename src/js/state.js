@@ -152,6 +152,19 @@ export function sessionLabel(completedPomodoros, mode) {
   return `Focos: ${filledSessions(completedPomodoros, mode)} de ${POMODOROS_UNTIL_LONG_BREAK}`;
 }
 
+export function nextStepLabel(state) {
+  if (state.mode === "pomodoro") {
+    const finishesCycle =
+      (state.completedPomodoros + 1) % POMODOROS_UNTIL_LONG_BREAK === 0;
+    return finishesCycle ? "Depois: pausa longa" : "Depois: pausa curta";
+  }
+  return "Depois: foco";
+}
+
+export function restartSession(state, now) {
+  return selectMode(state, state.mode, now);
+}
+
 export function actionLabel(state) {
   if (state.running) return "Pausar";
   if (state.awaitingStart === "break") return "Começar intervalo";

@@ -2,6 +2,7 @@ import {
   completionMessage,
   createInitialState,
   pauseSession,
+  restartSession,
   selectMode,
   startSession,
   tick,
@@ -70,6 +71,11 @@ export function createTimer({ view, audio, notifications }) {
     },
     setMode(mode) {
       state = selectMode(state, mode, Date.now());
+      stopLoop();
+      publish();
+    },
+    restart() {
+      state = restartSession(state, Date.now());
       stopLoop();
       publish();
     },

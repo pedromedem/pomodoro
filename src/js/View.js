@@ -3,6 +3,7 @@ import {
   actionLabel,
   filledSessions,
   MODES,
+  nextStepLabel,
   sessionLabel,
   visibleFocusMs,
 } from "./state.js";
@@ -20,6 +21,7 @@ export function createView() {
   const minutes = required("#minutes");
   const seconds = required("#seconds");
   const status = required("#text");
+  const nextStep = required("#nextStep");
   const focusTime = required("#focusTime");
   const sessionMarks = required("#sessionMarks");
   const marks = [...sessionMarks.querySelectorAll(".mark")];
@@ -35,7 +37,10 @@ export function createView() {
       minutes.textContent = clock.minutes;
       seconds.textContent = clock.seconds;
       status.textContent = state.statusText;
-      focusTime.textContent = `em foco há ${formatFocus(visibleFocusMs(state, now))}`;
+      nextStep.textContent = nextStepLabel(state);
+      const focusMs = visibleFocusMs(state, now);
+      focusTime.hidden = focusMs <= 0;
+      focusTime.textContent = `em foco há ${formatFocus(focusMs)}`;
       document.title = formatTitle(state.remainingMs, state.statusText);
 
       const ratio =

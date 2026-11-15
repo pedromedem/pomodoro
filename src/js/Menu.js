@@ -18,12 +18,12 @@ export function closeMenu() {
   return opener;
 }
 
-export function toggleMenu() {
+export function toggleMenu(audio) {
   if (menuElement) {
     closeMenu()?.focus();
     return;
   }
-  openMenu();
+  openMenu(audio);
 }
 
 function themeButton(id, label, src, theme) {
@@ -46,12 +46,35 @@ function themeButton(id, label, src, theme) {
   return button;
 }
 
-function openMenu() {
+function volumeControl(label, value, onInput) {
+  const field = document.createElement("label");
+  field.className = "volume";
+
+  const name = document.createElement("span");
+  name.textContent = label;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = "0";
+  slider.max = "1";
+  slider.step = "0.05";
+  slider.value = String(value);
+  slider.setAttribute("aria-label", label);
+  slider.addEventListener("input", () => {
+    onInput(Number(slider.value));
+  });
+  slider.addEventListener("click", (event) => event.stopPropagation());
+
+  field.append(name, slider);
+  return field;
+}
+
+function openMenu(audio) {
   const menu = document.createElement("div");
   menu.className = "menu";
   menu.setAttribute("role", "dialog");
   menu.setAttribute("aria-modal", "true");
-  menu.setAttribute("aria-label", "Temas");
+  menu.setAttribute("aria-label", "Ajustes");
 
   const content = document.createElement("div");
   content.className = "menu-content";
@@ -60,12 +83,12 @@ function openMenu() {
   header.className = "menu-header";
 
   const title = document.createElement("p");
-  title.textContent = "Temas";
+  title.textContent = "Ajustes";
 
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.id = "close-menu";
-  closeButton.setAttribute("aria-label", "Fechar temas");
+  closeButton.setAttribute("aria-label", "Fechar ajustes");
   const closeIcon = document.createElement("span");
   closeIcon.className = "close";
   closeIcon.setAttribute("aria-hidden", "true");
@@ -79,6 +102,12 @@ function openMenu() {
   body.append(
     themeButton("pink-theme", "Tema rosa", pinkSrc, "pink"),
     themeButton("green-theme", "Tema verde", greenSrc, "green"),
+    volumeControl("Harpa", audio?.musicVolume?.() ?? 0.45, (value) => {
+      audio?.setMusicVolume(value);
+    }),
+    volumeControl("Sino", audio?.bellVolume?.() ?? 0.55, (value) => {
+      audio?.setBellVolume(value);
+    }),
   );
 
   content.append(header, body);
